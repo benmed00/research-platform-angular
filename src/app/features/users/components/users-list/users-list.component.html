@@ -1,0 +1,26 @@
+<div class="users-container">
+  <app-page-header
+    title="Gestion des Utilisateurs"
+    subtitle="Gérer les utilisateurs et leurs permissions"
+    icon="people"
+  >
+  </app-page-header>
+
+  <div class="actions-bar">
+    <button mat-raised-button color="primary">
+      <mat-icon>add</mat-icon>
+      Nouvel utilisateur
+    </button>
+  </div>
+
+  <app-data-table
+    [columns]="columnLabels"
+    [data]="users"
+    [displayedColumns]="displayedColumns"
+    [showActions]="true"
+    (edit)="onEdit($event)"
+    (delete)="onDelete($event)"
+    (view)="onView($event)"
+  >
+  </app-data-table>
+</div>
