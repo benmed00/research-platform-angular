@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 /** Trend indicator shown on a {@link StatCardComponent}. */
 export interface StatCardTrend {
@@ -22,7 +22,9 @@ export interface StatCardTrend {
 @Component({
   selector: 'app-stat-card',
   templateUrl: './stat-card.component.html',
-  styleUrls: ['./stat-card.component.scss']
+  styleUrls: ['./stat-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class StatCardComponent {
   /** Metric label. */

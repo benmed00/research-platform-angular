@@ -7,17 +7,22 @@ import { of, throwError } from 'rxjs';
 import { SharedModule } from '../../../shared/shared.module';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginComponent } from './login.component';
-import { createJwt, createMockUser } from '../../../../testing/test-helpers';
+import {
+  createJwt,
+  createMockUser,
+  spyAuthService,
+  spyRouter
+} from '../../../../testing/test-helpers';
 
 describe('LoginComponent', () => {
   let component: LoginComponent;
   let fixture: ComponentFixture<LoginComponent>;
-  let authService: jasmine.SpyObj<AuthService>;
-  let router: jasmine.SpyObj<Router>;
+  let authService: AuthService;
+  let router: Router;
 
   beforeEach(async () => {
-    authService = jasmine.createSpyObj('AuthService', ['login']);
-    router = jasmine.createSpyObj('Router', ['navigate']);
+    authService = spyAuthService();
+    router = spyRouter();
 
     await TestBed.configureTestingModule({
       declarations: [LoginComponent],
@@ -43,7 +48,7 @@ describe('LoginComponent', () => {
   });
 
   it('should navigate to dashboard on successful login', () => {
-    authService.login.and.returnValue(
+    vi.mocked(authService.login).mockReturnValue(
       of({
         token: createJwt(Math.floor(Date.now() / 1000) + 3600),
         expiresIn: 3600,
@@ -59,12 +64,12 @@ describe('LoginComponent', () => {
   });
 
   it('should show an error message on failed login', () => {
-    authService.login.and.returnValue(throwError(() => new Error('Unauthorized')));
+    vi.mocked(authService.login).mockReturnValue(throwError(() => new Error('Unauthorized')));
     component.loginForm.setValue({ email: 'test@example.com', password: 'secret1' });
 
     component.onSubmit();
 
     expect(component.error).toBe('Email ou mot de passe incorrect');
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
   });
 });

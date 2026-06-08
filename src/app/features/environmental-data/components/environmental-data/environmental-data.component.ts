@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * Environmental monitoring data explorer and time-series viewer.
@@ -9,6 +9,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-environmental-data',
   templateUrl: './environmental-data.component.html',
-  styleUrls: ['./environmental-data.component.scss']
+  styleUrls: ['./environmental-data.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class EnvironmentalDataComponent {}

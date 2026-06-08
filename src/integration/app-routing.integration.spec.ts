@@ -5,14 +5,20 @@ import { AuthGuard } from '../app/core/guards/auth.guard';
 import { RoleGuard } from '../app/core/guards/role.guard';
 import { AuthService } from '../app/core/services/auth.service';
 import { UserRole } from '../app/models/user.model';
-import { createMockUser } from '../testing/test-helpers';
+import { createMockUser, spyAuthService } from '../testing/test-helpers';
 
 describe('Integration: App routing guards', () => {
+  beforeEach(() => {
+    vi.useFakeTimers({ advanceTimeDelta: 1, shouldAdvanceTime: true });
+  });
+  afterEach(() => {
+    vi.useRealTimers();
+  });
   let router: Router;
-  let authService: jasmine.SpyObj<AuthService>;
+  let authService: AuthService;
 
   beforeEach(() => {
-    authService = jasmine.createSpyObj('AuthService', ['isAuthenticated', 'getCurrentUser']);
+    authService = spyAuthService();
 
     TestBed.configureTestingModule({
       imports: [
@@ -39,32 +45,38 @@ describe('Integration: App routing guards', () => {
   });
 
   it('should redirect unauthenticated users to login', async () => {
-    authService.isAuthenticated.and.returnValue(false);
-    await router.navigateByUrl('/dashboard');
+    vi.mocked(authService.isAuthenticated).mockReturnValue(false);
+    router.navigateByUrl('/dashboard');
+    await vi.advanceTimersByTimeAsync(0);
     expect(router.url).toBe('/login?returnUrl=%2Fdashboard');
   });
 
   it('should allow authenticated users to reach dashboard', async () => {
-    authService.isAuthenticated.and.returnValue(true);
-    await router.navigateByUrl('/dashboard');
+    vi.mocked(authService.isAuthenticated).mockReturnValue(true);
+    router.navigateByUrl('/dashboard');
+    await vi.advanceTimersByTimeAsync(0);
     expect(router.url).toBe('/dashboard');
   });
 
   it('should block users without required roles', async () => {
-    authService.isAuthenticated.and.returnValue(true);
-    authService.getCurrentUser.and.returnValue(createMockUser({ role: UserRole.BOTANISTE }));
+    vi.mocked(authService.isAuthenticated).mockReturnValue(true);
+    vi.mocked(authService.getCurrentUser).mockReturnValue(
+      createMockUser({ role: UserRole.BOTANISTE })
+    );
 
-    await router.navigateByUrl('/users');
+    router.navigateByUrl('/users');
+    await vi.advanceTimersByTimeAsync(0);
     expect(router.url).toBe('/unauthorized');
   });
 
   it('should allow users with required roles', async () => {
-    authService.isAuthenticated.and.returnValue(true);
-    authService.getCurrentUser.and.returnValue(
+    vi.mocked(authService.isAuthenticated).mockReturnValue(true);
+    vi.mocked(authService.getCurrentUser).mockReturnValue(
       createMockUser({ role: UserRole.DIRECTEUR_ADMIN_FINANCIER })
     );
 
-    await router.navigateByUrl('/users');
+    router.navigateByUrl('/users');
+    await vi.advanceTimersByTimeAsync(0);
     expect(router.url).toBe('/users');
   });
 });

@@ -1,10 +1,53 @@
 import { Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { SharedModule } from '../app/shared/shared.module';
 import { Permission, User, UserRole } from '../app/models/user.model';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { Router } from '@angular/router';
+import { AuthService } from '../app/core/services/auth.service';
+import { Observable, of } from 'rxjs';
+
+/** Vitest spy-backed partial {@link AuthService} for unit tests. */
+export type SpyAuthService = {
+  isAuthenticated: ReturnType<typeof vi.fn>;
+  getCurrentUser: ReturnType<typeof vi.fn>;
+  getToken: ReturnType<typeof vi.fn>;
+  login: ReturnType<typeof vi.fn>;
+  logout: ReturnType<typeof vi.fn>;
+  currentUser$: Observable<User | null>;
+};
+
+/**
+ * Creates a Vitest spy object cast as {@link AuthService} for TestBed providers.
+ *
+ * @param partial - Optional spy overrides
+ * @returns AuthService-shaped spy for TestBed `useValue` providers
+ */
+export function spyAuthService(partial: Partial<SpyAuthService> = {}): AuthService {
+  return {
+    isAuthenticated: vi.fn(),
+    getCurrentUser: vi.fn(),
+    getToken: vi.fn(),
+    login: vi.fn(),
+    logout: vi.fn(),
+    currentUser$: of(null),
+    ...partial
+  } as unknown as AuthService;
+}
+
+/**
+ * Creates a Vitest spy object cast as {@link Router} for TestBed providers.
+ *
+ * @returns Router-shaped spy with a `navigate` mock
+ */
+export function spyRouter(): Router {
+  return {
+    navigate: vi.fn().mockResolvedValue(true)
+  } as unknown as Router;
+}
 
 /**
  * -----------------------------------------------------------------------------
@@ -146,7 +189,8 @@ export function createMockUser(overrides: MockUserOverrides = {}): User {
  */
 export async function configureFeatureModuleTest(moduleType: Type<unknown>): Promise<void> {
   await TestBed.configureTestingModule({
-    imports: [moduleType, NoopAnimationsModule, HttpClientTestingModule, RouterTestingModule]
+    imports: [moduleType, NoopAnimationsModule, RouterTestingModule],
+    providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
   }).compileComponents();
 }
 
@@ -158,7 +202,8 @@ export async function configureFeatureModuleTest(moduleType: Type<unknown>): Pro
  */
 export async function configureSharedComponentTest(component: Type<unknown>): Promise<void> {
   await TestBed.configureTestingModule({
-    imports: [SharedModule, NoopAnimationsModule, RouterTestingModule, HttpClientTestingModule],
-    declarations: [component]
+    declarations: [component],
+    imports: [SharedModule, NoopAnimationsModule, RouterTestingModule],
+    providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
   }).compileComponents();
 }

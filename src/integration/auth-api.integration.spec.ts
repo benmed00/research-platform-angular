@@ -1,7 +1,8 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { AuthService } from '../app/core/services/auth.service';
 import { createMockApiLoginResponse, mockApiAccounts } from '../testing/mock-api.fixtures';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('Integration: Auth API contract', () => {
   let authService: AuthService;
@@ -9,8 +10,12 @@ describe('Integration: Auth API contract', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [AuthService]
+      imports: [],
+      providers: [
+        AuthService,
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
 
     authService = TestBed.inject(AuthService);
@@ -58,7 +63,7 @@ describe('Integration: Auth API contract', () => {
         { status: 401, statusText: 'Unauthorized' }
       );
 
-    expect(receivedError).toBeTrue();
+    expect(receivedError).toBe(true);
     expect(authService.getToken()).toBeNull();
   });
 });

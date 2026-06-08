@@ -31,7 +31,7 @@ describe('MissionsListComponent', () => {
     const missions = createMockMissions();
     httpMock.expectOne('/api/missions').flush(missions);
 
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     expect(component.missions).toEqual(missions);
   });
 
@@ -41,7 +41,7 @@ describe('MissionsListComponent', () => {
       statusText: 'Internal Server Error'
     });
 
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     expect(component.missions).toEqual([]);
   });
 });

@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ApiService } from '../../../../core/services/api.service';
 import { User } from '../../../../models/user.model';
 
@@ -8,7 +8,9 @@ import { User } from '../../../../models/user.model';
 @Component({
   selector: 'app-users-list',
   templateUrl: './users-list.component.html',
-  styleUrls: ['./users-list.component.scss']
+  styleUrls: ['./users-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class UsersListComponent implements OnInit {
   users: User[] = [];

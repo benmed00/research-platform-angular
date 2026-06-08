@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * Centered Material progress spinner for loading states.
@@ -8,6 +8,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-loading-spinner',
   templateUrl: './loading-spinner.component.html',
-  styleUrls: ['./loading-spinner.component.scss']
+  styleUrls: ['./loading-spinner.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class LoadingSpinnerComponent {}

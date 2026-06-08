@@ -1,8 +1,9 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
 import { Permission, UserRole } from '../../models/user.model';
 import { createJwt, createMockUser } from '../../../testing/test-helpers';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -10,8 +11,12 @@ describe('AuthService', () => {
 
   beforeEach(() => {
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [AuthService]
+      imports: [],
+      providers: [
+        AuthService,
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
     service = TestBed.inject(AuthService);
     httpMock = TestBed.inject(HttpTestingController);
@@ -28,39 +33,39 @@ describe('AuthService', () => {
   });
 
   it('should return false when no token is stored', () => {
-    expect(service.isAuthenticated()).toBeFalse();
+    expect(service.isAuthenticated()).toBe(false);
   });
 
   it('should return true for a non-expired token', () => {
     const exp = Math.floor(Date.now() / 1000) + 3600;
     localStorage.setItem('token', createJwt(exp));
-    expect(service.isAuthenticated()).toBeTrue();
+    expect(service.isAuthenticated()).toBe(true);
   });
 
   it('should return false for an expired token', () => {
     const exp = Math.floor(Date.now() / 1000) - 3600;
     localStorage.setItem('token', createJwt(exp));
-    expect(service.isAuthenticated()).toBeFalse();
+    expect(service.isAuthenticated()).toBe(false);
   });
 
   it('should return false for an invalid token', () => {
     localStorage.setItem('token', 'not-a-valid-jwt');
-    expect(service.isAuthenticated()).toBeFalse();
+    expect(service.isAuthenticated()).toBe(false);
   });
 
   it('should return false when token has no expiration claim', () => {
     const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
     const payload = btoa(JSON.stringify({ sub: 'user' }));
     localStorage.setItem('token', `${header}.${payload}.signature`);
-    expect(service.isAuthenticated()).toBeFalse();
+    expect(service.isAuthenticated()).toBe(false);
   });
 
   it('should return false for hasPermission when no user is loaded', () => {
-    expect(service.hasPermission(Permission.READ)).toBeFalse();
+    expect(service.hasPermission(Permission.READ)).toBe(false);
   });
 
   it('should return false for hasRole when no user is loaded', () => {
-    expect(service.hasRole(UserRole.BOTANISTE)).toBeFalse();
+    expect(service.hasRole(UserRole.BOTANISTE)).toBe(false);
   });
 
   it('should emit current user changes through currentUser$', () => {
@@ -143,10 +148,10 @@ describe('AuthService', () => {
     service.login(credentials).subscribe();
     httpMock.expectOne('/api/auth/login').flush(response);
 
-    expect(service.hasRole(UserRole.DIRECTEUR_SCIENTIFIQUE)).toBeTrue();
-    expect(service.hasRole(UserRole.BOTANISTE)).toBeFalse();
-    expect(service.hasPermission(Permission.ADMIN)).toBeTrue();
-    expect(service.hasPermission(Permission.DELETE)).toBeFalse();
+    expect(service.hasRole(UserRole.DIRECTEUR_SCIENTIFIQUE)).toBe(true);
+    expect(service.hasRole(UserRole.BOTANISTE)).toBe(false);
+    expect(service.hasPermission(Permission.ADMIN)).toBe(true);
+    expect(service.hasPermission(Permission.DELETE)).toBe(false);
   });
 });
 
@@ -156,8 +161,12 @@ describe('AuthService storage bootstrap', () => {
   beforeEach(() => {
     localStorage.clear();
     TestBed.configureTestingModule({
-      imports: [HttpClientTestingModule],
-      providers: [AuthService]
+      imports: [],
+      providers: [
+        AuthService,
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting()
+      ]
     });
     httpMock = TestBed.inject(HttpTestingController);
   });

@@ -26,7 +26,7 @@ describe('SpeciesListComponent', () => {
     const species = createMockSpecies();
     httpMock.expectOne('/api/species').flush(species);
 
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     expect(component.species).toEqual(species);
   });
 

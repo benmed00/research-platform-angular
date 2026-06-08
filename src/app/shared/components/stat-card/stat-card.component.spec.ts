@@ -25,6 +25,6 @@ describe('StatCardComponent', () => {
   it('should bind input properties', () => {
     expect(component.title).toBe('Espèces');
     expect(component.value).toBe(42);
-    expect(component.trend?.isPositive).toBeTrue();
+    expect(component.trend?.isPositive).toBe(true);
   });
 });

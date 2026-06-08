@@ -5,7 +5,8 @@ import {
   EventEmitter,
   ViewChild,
   OnChanges,
-  AfterViewInit
+  AfterViewInit,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -26,7 +27,9 @@ import { MatSort } from '@angular/material/sort';
 @Component({
   selector: 'app-data-table',
   templateUrl: './data-table.component.html',
-  styleUrls: ['./data-table.component.scss']
+  styleUrls: ['./data-table.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class DataTableComponent implements OnChanges, AfterViewInit {
   @Input() columns: Record<string, string> = {};

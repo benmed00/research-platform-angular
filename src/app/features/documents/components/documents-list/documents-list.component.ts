@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ApiService } from '../../../../core/services/api.service';
 
 export interface DocumentListItem {
@@ -14,7 +14,9 @@ export interface DocumentListItem {
 @Component({
   selector: 'app-documents-list',
   templateUrl: './documents-list.component.html',
-  styleUrls: ['./documents-list.component.scss']
+  styleUrls: ['./documents-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class DocumentsListComponent implements OnInit {
   documents: DocumentListItem[] = [];

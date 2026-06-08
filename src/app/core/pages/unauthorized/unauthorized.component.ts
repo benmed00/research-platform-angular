@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { Router } from '@angular/router';
 
 /**
@@ -7,7 +7,9 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-unauthorized',
   templateUrl: './unauthorized.component.html',
-  styleUrls: ['./unauthorized.component.scss']
+  styleUrls: ['./unauthorized.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class UnauthorizedComponent {
   /**

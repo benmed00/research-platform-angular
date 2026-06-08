@@ -1,6 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { HTTP_INTERCEPTORS, HttpClient } from '@angular/common/http';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HTTP_INTERCEPTORS,
+  HttpClient,
+  provideHttpClient,
+  withInterceptorsFromDi,
+  withXhr
+} from '@angular/common/http';
+import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
@@ -25,18 +31,14 @@ describe('Integration: Auth stack (login → token → API)', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [
-        HttpClientTestingModule,
-        ReactiveFormsModule,
-        SharedModule,
-        NoopAnimationsModule,
-        RouterTestingModule
-      ],
       declarations: [LoginComponent],
+      imports: [ReactiveFormsModule, SharedModule, NoopAnimationsModule, RouterTestingModule],
       providers: [
         AuthService,
         ApiService,
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
+        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClientTesting()
       ]
     }).compileComponents();
 
@@ -55,7 +57,7 @@ describe('Integration: Auth stack (login → token → API)', () => {
   it('should complete login and attach bearer token to subsequent API calls', () => {
     const loginFixture = TestBed.createComponent(LoginComponent);
     const loginComponent = loginFixture.componentInstance;
-    spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
     const credentials = {
       email: mockApiAccounts[1].email,

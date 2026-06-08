@@ -1,5 +1,9 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { configureFeatureModuleTest, createMockUser } from '../../../../testing/test-helpers';
+import {
+  configureFeatureModuleTest,
+  createMockUser,
+  spyAuthService
+} from '../../../../testing/test-helpers';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserRole } from '../../../models/user.model';
 import { LayoutModule } from '../../layout.module';
@@ -8,10 +12,10 @@ import { SidebarComponent } from './sidebar.component';
 describe('SidebarComponent', () => {
   let component: SidebarComponent;
   let fixture: ComponentFixture<SidebarComponent>;
-  let authService: jasmine.SpyObj<AuthService>;
+  let authService: AuthService;
 
   beforeEach(async () => {
-    authService = jasmine.createSpyObj('AuthService', ['getCurrentUser']);
+    authService = spyAuthService();
 
     await configureFeatureModuleTest(LayoutModule);
     TestBed.overrideProvider(AuthService, { useValue: authService });
@@ -26,12 +30,14 @@ describe('SidebarComponent', () => {
   });
 
   it('should return no menu items when user is missing', () => {
-    authService.getCurrentUser.and.returnValue(null);
+    vi.mocked(authService.getCurrentUser).mockReturnValue(null);
     expect(component.getVisibleMenuItems()).toEqual([]);
   });
 
   it('should filter menu items by user role', () => {
-    authService.getCurrentUser.and.returnValue(createMockUser({ role: UserRole.BOTANISTE }));
+    vi.mocked(authService.getCurrentUser).mockReturnValue(
+      createMockUser({ role: UserRole.BOTANISTE })
+    );
 
     const routes = component.getVisibleMenuItems().map((item) => item.route);
     expect(routes).toContain('/dashboard');

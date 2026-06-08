@@ -1,6 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { configureFeatureModuleTest, createMockUser } from '../../../../testing/test-helpers';
+import {
+  configureFeatureModuleTest,
+  createMockUser,
+  spyAuthService,
+  spyRouter
+} from '../../../../testing/test-helpers';
+import { of } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { LayoutModule } from '../../layout.module';
 import { HeaderComponent } from './header.component';
@@ -8,15 +14,13 @@ import { HeaderComponent } from './header.component';
 describe('HeaderComponent', () => {
   let component: HeaderComponent;
   let fixture: ComponentFixture<HeaderComponent>;
-  let authService: jasmine.SpyObj<AuthService>;
-  let router: jasmine.SpyObj<Router>;
+  let authService: AuthService;
+  let router: Router;
 
   beforeEach(async () => {
-    authService = jasmine.createSpyObj('AuthService', ['getCurrentUser', 'logout'], {
-      currentUser$: { subscribe: () => ({ unsubscribe: () => undefined }) }
-    });
-    authService.getCurrentUser.and.returnValue(createMockUser());
-    router = jasmine.createSpyObj('Router', ['navigate']);
+    authService = spyAuthService({ currentUser$: of(createMockUser()) });
+    vi.mocked(authService.getCurrentUser).mockReturnValue(createMockUser());
+    router = spyRouter();
 
     await configureFeatureModuleTest(LayoutModule);
     TestBed.overrideProvider(AuthService, { useValue: authService });
@@ -32,7 +36,7 @@ describe('HeaderComponent', () => {
   });
 
   it('should emit sidebar toggle events', () => {
-    spyOn(component.toggleSidebar, 'emit');
+    vi.spyOn(component.toggleSidebar, 'emit').mockReturnValue(undefined);
     component.onToggleSidebar();
     expect(component.toggleSidebar.emit).toHaveBeenCalled();
   });

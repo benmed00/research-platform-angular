@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 
 /**
  * Accounting module dashboard for budgets, invoices, and financial reports.
@@ -9,6 +9,8 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-accounting-dashboard',
   templateUrl: './accounting-dashboard.component.html',
-  styleUrls: ['./accounting-dashboard.component.scss']
+  styleUrls: ['./accounting-dashboard.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class AccountingDashboardComponent {}

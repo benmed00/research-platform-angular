@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ApiService } from '../../../../core/services/api.service';
 
 export interface MissionListItem {
@@ -14,7 +14,9 @@ export interface MissionListItem {
 @Component({
   selector: 'app-missions-list',
   templateUrl: './missions-list.component.html',
-  styleUrls: ['./missions-list.component.scss']
+  styleUrls: ['./missions-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class MissionsListComponent implements OnInit {
   missions: MissionListItem[] = [];
