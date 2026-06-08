@@ -85,7 +85,7 @@
     "test:watch": "ng test",
     "test:ci": "ng test --configuration=ci --no-watch --browsers=ChromeHeadless",
     "test:coverage": "ng test --configuration=coverage --no-watch --browsers=ChromeHeadless",
-    "test:mock-api": "node --test mock-api/**/*.test.cjs",
+    "test:mock-api": "node --test \"mock-api/**/*.test.cjs\"",
     "test:integration": "ng test --no-watch --browsers=ChromeHeadless --include=src/integration/**/*.spec.ts",
     "test:e2e": "node scripts/e2e-smoke.cjs",
     "test:all": "pnpm run test:mock-api && pnpm run test:e2e && pnpm run test:ci",
