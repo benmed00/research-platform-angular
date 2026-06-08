@@ -1,0 +1,20 @@
+<mat-sidenav-container class="sidebar-container" [class.closed]="!isOpen">
+  <mat-sidenav mode="side" opened="true" class="sidebar">
+    <div class="sidebar-header">
+      <mat-icon class="sidebar-logo">science</mat-icon>
+      <h3 *ngIf="isOpen">Centre de Recherche</h3>
+    </div>
+
+    <mat-nav-list>
+      <a
+        mat-list-item
+        *ngFor="let item of getVisibleMenuItems()"
+        [routerLink]="item.route"
+        routerLinkActive="active"
+      >
+        <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
+        <span matListItemTitle *ngIf="isOpen">{{ item.label }}</span>
+      </a>
+    </mat-nav-list>
+  </mat-sidenav>
+</mat-sidenav-container>
