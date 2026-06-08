@@ -126,8 +126,12 @@ GitHub Actions workflow: `.github/workflows/ci.yml`
 Runs on push/PR to `main` and `develop`:
 
 1. `pnpm install --frozen-lockfile`
-2. `pnpm run build`
-3. `pnpm run test:ci`
+2. `pnpm run format:check`
+3. `pnpm run lint`
+4. `pnpm run build`
+5. `pnpm run test:ci`
+
+CD workflow (`.github/workflows/cd.yml`) runs on version tags (`v*.*.*`) or manual dispatch and publishes a production tarball artifact.
 
 ## Debugging failing tests
 
