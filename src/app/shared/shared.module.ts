@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
-import { HttpClientModule } from '@angular/common/http';
 
 // Material Modules
 import { MatButtonModule } from '@angular/material/button';
@@ -72,20 +71,12 @@ const COMPONENTS = [
 
 @NgModule({
   declarations: COMPONENTS,
-  imports: [
-    CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    RouterModule,
-    HttpClientModule,
-    ...MATERIAL_MODULES
-  ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, RouterModule, ...MATERIAL_MODULES],
   exports: [
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
     RouterModule,
-    HttpClientModule,
     ...MATERIAL_MODULES,
     ...COMPONENTS
   ]
