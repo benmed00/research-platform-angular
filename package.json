@@ -18,11 +18,11 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/your-organization/research-platform.git"
+    "url": "https://github.com/benmed00/research-platform-angular.git"
   },
-  "homepage": "https://your-organization.example.com/research-platform",
+  "homepage": "https://github.com/benmed00/research-platform-angular",
   "bugs": {
-    "url": "https://github.com/your-organization/research-platform/issues",
+    "url": "https://github.com/benmed00/research-platform-angular/issues",
     "email": "support@example.com"
   },
   "keywords": [
