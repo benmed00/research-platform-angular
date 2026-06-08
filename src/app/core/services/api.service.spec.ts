@@ -3,7 +3,8 @@ import { HttpTestingController, provideHttpClientTesting } from '@angular/common
 import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
-import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
+import { authInterceptor } from '../interceptors/auth.interceptor';
 import { spyAuthService } from '../../../testing/test-helpers';
 
 describe('ApiService', () => {
@@ -19,7 +20,7 @@ describe('ApiService', () => {
       providers: [
         ApiService,
         { provide: AuthService, useValue: authService },
-        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
         provideHttpClientTesting()
       ]
     });

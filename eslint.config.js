@@ -67,9 +67,9 @@ export default tseslint.config(
       '@typescript-eslint/explicit-function-return-type': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
       '@typescript-eslint/no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
-      '@angular-eslint/prefer-standalone': 'off',
-      '@angular-eslint/prefer-on-push-component-change-detection': 'off',
-      '@angular-eslint/prefer-inject': 'off',
+      '@angular-eslint/prefer-standalone': 'error',
+      '@angular-eslint/prefer-on-push-component-change-detection': 'error',
+      '@angular-eslint/prefer-inject': 'warn',
       'jsdoc/check-tag-names': ['warn', { definedTags: jsdocDefinedTags }],
       'jsdoc/check-types': 'off',
       'jsdoc/no-types': 'warn',
@@ -121,7 +121,7 @@ export default tseslint.config(
     }
   },
   {
-    files: ['**/*.spec.ts', '**/*.module.ts', '**/*-routing.module.ts', 'src/main.ts'],
+    files: ['**/*.spec.ts', 'src/main.ts'],
     rules: {
       'jsdoc/require-jsdoc': 'off',
       'jsdoc/require-param': 'off',

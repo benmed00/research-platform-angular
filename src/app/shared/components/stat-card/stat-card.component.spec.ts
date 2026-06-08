@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { configureSharedComponentTest } from '../../../../testing/test-helpers';
+import { configureStandaloneComponentTest } from '../../../../testing/test-helpers';
 import { StatCardComponent } from './stat-card.component';
 
 describe('StatCardComponent', () => {
@@ -7,7 +7,7 @@ describe('StatCardComponent', () => {
   let fixture: ComponentFixture<StatCardComponent>;
 
   beforeEach(async () => {
-    await configureSharedComponentTest(StatCardComponent);
+    await configureStandaloneComponentTest(StatCardComponent);
     fixture = TestBed.createComponent(StatCardComponent);
     component = fixture.componentInstance;
     component.title = 'Espèces';

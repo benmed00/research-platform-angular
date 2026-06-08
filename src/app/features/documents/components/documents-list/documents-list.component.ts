@@ -1,4 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject
+} from '@angular/core';
+import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
 import { ApiService } from '../../../../core/services/api.service';
 
 export interface DocumentListItem {
@@ -15,10 +22,13 @@ export interface DocumentListItem {
   selector: 'app-documents-list',
   templateUrl: './documents-list.component.html',
   styleUrls: ['./documents-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class DocumentsListComponent implements OnInit {
+  private readonly cdr = inject(ChangeDetectorRef);
+
   documents: DocumentListItem[] = [];
   loading = false;
   displayedColumns = ['title', 'type', 'category'];
@@ -51,14 +61,17 @@ export class DocumentsListComponent implements OnInit {
    */
   loadDocuments(): void {
     this.loading = true;
+    this.cdr.markForCheck();
     this.apiService.get<DocumentListItem[]>('/documents').subscribe({
       next: (documents) => {
         this.documents = documents;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.documents = [];
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }

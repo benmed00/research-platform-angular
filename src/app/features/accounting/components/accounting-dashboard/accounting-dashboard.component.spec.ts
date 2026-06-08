@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { configureFeatureModuleTest } from '../../../../../testing/test-helpers';
-import { AccountingModule } from '../../accounting.module';
+import { configureStandaloneComponentTest } from '../../../../../testing/test-helpers';
+
 import { AccountingDashboardComponent } from './accounting-dashboard.component';
 
 describe('AccountingDashboardComponent', () => {
   let fixture: ComponentFixture<AccountingDashboardComponent>;
 
   beforeEach(async () => {
-    await configureFeatureModuleTest(AccountingModule);
+    await configureStandaloneComponentTest(AccountingDashboardComponent);
     fixture = TestBed.createComponent(AccountingDashboardComponent);
     fixture.detectChanges();
   });

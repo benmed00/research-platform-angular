@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-import { configureFeatureModuleTest } from '../../../../../testing/test-helpers';
+import { configureStandaloneComponentTest } from '../../../../../testing/test-helpers';
 import { createMockEquipment } from '../../../../../testing/mock-api.fixtures';
-import { EquipmentModule } from '../../equipment.module';
+
 import { EquipmentListComponent } from './equipment-list.component';
 
 describe('EquipmentListComponent', () => {
@@ -11,7 +11,7 @@ describe('EquipmentListComponent', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
-    await configureFeatureModuleTest(EquipmentModule);
+    await configureStandaloneComponentTest(EquipmentListComponent);
     httpMock = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(EquipmentListComponent);
     component = fixture.componentInstance;

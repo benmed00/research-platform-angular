@@ -3,12 +3,12 @@ import { HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserRole } from '../../../models/user.model';
 import {
-  configureFeatureModuleTest,
+  configureStandaloneComponentTest,
   createMockUser,
   spyAuthService
 } from '../../../../testing/test-helpers';
 import { createMockDashboardStats } from '../../../../testing/mock-api.fixtures';
-import { DashboardModule } from '../../dashboard.module';
+
 import { DashboardComponent } from './dashboard.component';
 
 describe('DashboardComponent', () => {
@@ -22,7 +22,7 @@ describe('DashboardComponent', () => {
     vi.mocked(authService.getCurrentUser).mockReturnValue(null);
     vi.mocked(authService.getToken).mockReturnValue(null);
 
-    await configureFeatureModuleTest(DashboardModule);
+    await configureStandaloneComponentTest(DashboardComponent);
     TestBed.overrideProvider(AuthService, { useValue: authService });
     httpMock = TestBed.inject(HttpTestingController);
 

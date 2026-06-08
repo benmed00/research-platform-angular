@@ -1,4 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject
+} from '@angular/core';
+import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
 import { ApiService } from '../../../../core/services/api.service';
 
 export interface MissionListItem {
@@ -15,10 +22,13 @@ export interface MissionListItem {
   selector: 'app-missions-list',
   templateUrl: './missions-list.component.html',
   styleUrls: ['./missions-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class MissionsListComponent implements OnInit {
+  private readonly cdr = inject(ChangeDetectorRef);
+
   missions: MissionListItem[] = [];
   loading = false;
   displayedColumns = ['name', 'status', 'startDate'];
@@ -51,14 +61,17 @@ export class MissionsListComponent implements OnInit {
    */
   loadMissions(): void {
     this.loading = true;
+    this.cdr.markForCheck();
     this.apiService.get<MissionListItem[]>('/missions').subscribe({
       next: (missions) => {
         this.missions = missions;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.missions = [];
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }

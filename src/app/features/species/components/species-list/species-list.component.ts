@@ -1,4 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject
+} from '@angular/core';
+import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
 import { ApiService } from '../../../../core/services/api.service';
 
 export interface SpeciesListItem {
@@ -15,10 +22,13 @@ export interface SpeciesListItem {
   selector: 'app-species-list',
   templateUrl: './species-list.component.html',
   styleUrls: ['./species-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class SpeciesListComponent implements OnInit {
+  private readonly cdr = inject(ChangeDetectorRef);
+
   species: SpeciesListItem[] = [];
   loading = false;
   displayedColumns = ['scientificName', 'commonName', 'iucnStatus'];
@@ -51,14 +61,17 @@ export class SpeciesListComponent implements OnInit {
    */
   loadSpecies(): void {
     this.loading = true;
+    this.cdr.markForCheck();
     this.apiService.get<SpeciesListItem[]>('/species').subscribe({
       next: (species) => {
         this.species = species;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.species = [];
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }

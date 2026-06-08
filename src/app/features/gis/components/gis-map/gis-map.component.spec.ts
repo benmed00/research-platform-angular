@@ -1,13 +1,13 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { configureFeatureModuleTest } from '../../../../../testing/test-helpers';
-import { GisModule } from '../../gis.module';
+import { configureStandaloneComponentTest } from '../../../../../testing/test-helpers';
+
 import { GisMapComponent } from './gis-map.component';
 
 describe('GisMapComponent', () => {
   let fixture: ComponentFixture<GisMapComponent>;
 
   beforeEach(async () => {
-    await configureFeatureModuleTest(GisModule);
+    await configureStandaloneComponentTest(GisMapComponent);
     fixture = TestBed.createComponent(GisMapComponent);
     fixture.detectChanges();
   });

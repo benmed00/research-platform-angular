@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
 
 /**
  *
@@ -7,8 +8,9 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'app-root',
   template: '<router-outlet></router-outlet>',
   styles: [],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [RouterOutlet]
 })
 export class AppComponent {
   title = 'Plateforme de Recherche';

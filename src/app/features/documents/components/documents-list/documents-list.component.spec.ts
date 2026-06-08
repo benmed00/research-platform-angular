@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-import { configureFeatureModuleTest } from '../../../../../testing/test-helpers';
+import { configureStandaloneComponentTest } from '../../../../../testing/test-helpers';
 import { createMockDocuments } from '../../../../../testing/mock-api.fixtures';
-import { DocumentsModule } from '../../documents.module';
+
 import { DocumentsListComponent } from './documents-list.component';
 
 describe('DocumentsListComponent', () => {
@@ -11,7 +11,7 @@ describe('DocumentsListComponent', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
-    await configureFeatureModuleTest(DocumentsModule);
+    await configureStandaloneComponentTest(DocumentsListComponent);
     httpMock = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(DocumentsListComponent);
     component = fixture.componentInstance;

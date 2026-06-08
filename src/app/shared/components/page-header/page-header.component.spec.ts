@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { configureSharedComponentTest } from '../../../../testing/test-helpers';
+import { configureStandaloneComponentTest } from '../../../../testing/test-helpers';
 import { PageHeaderComponent } from './page-header.component';
 
 describe('PageHeaderComponent', () => {
@@ -7,7 +7,7 @@ describe('PageHeaderComponent', () => {
   let fixture: ComponentFixture<PageHeaderComponent>;
 
   beforeEach(async () => {
-    await configureSharedComponentTest(PageHeaderComponent);
+    await configureStandaloneComponentTest(PageHeaderComponent);
     fixture = TestBed.createComponent(PageHeaderComponent);
     component = fixture.componentInstance;
     component.title = 'Utilisateurs';

@@ -1,4 +1,5 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectorRef, Component, ChangeDetectionStrategy, inject } from '@angular/core';
+import { SHARED_IMPORTS } from '../../../shared/shared-imports';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
@@ -10,10 +11,13 @@ import { AuthService } from '../../../core/services/auth.service';
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class LoginComponent {
+  private readonly cdr = inject(ChangeDetectorRef);
+
   loginForm: FormGroup;
   loading = false;
   error = '';
@@ -45,6 +49,7 @@ export class LoginComponent {
     if (this.loginForm.valid) {
       this.loading = true;
       this.error = '';
+      this.cdr.markForCheck();
 
       this.authService.login(this.loginForm.value).subscribe({
         next: () => {
@@ -53,6 +58,7 @@ export class LoginComponent {
         error: (_err) => {
           this.error = 'Email ou mot de passe incorrect';
           this.loading = false;
+          this.cdr.markForCheck();
         }
       });
     }

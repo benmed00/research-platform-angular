@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { configureSharedComponentTest, spyRouter } from '../../../../testing/test-helpers';
+import { configureStandaloneComponentTest, spyRouter } from '../../../../testing/test-helpers';
 import { UnauthorizedComponent } from './unauthorized.component';
 
 describe('UnauthorizedComponent', () => {
@@ -11,7 +11,7 @@ describe('UnauthorizedComponent', () => {
   beforeEach(async () => {
     router = spyRouter();
 
-    await configureSharedComponentTest(UnauthorizedComponent);
+    await configureStandaloneComponentTest(UnauthorizedComponent);
     TestBed.overrideProvider(Router, { useValue: router });
 
     fixture = TestBed.createComponent(UnauthorizedComponent);

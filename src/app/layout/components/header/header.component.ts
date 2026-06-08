@@ -1,4 +1,12 @@
-import { Component, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  Output,
+  EventEmitter,
+  ChangeDetectionStrategy,
+  inject
+} from '@angular/core';
+import { SHARED_IMPORTS } from '../../../shared/shared-imports';
 import { AuthService } from '../../../core/services/auth.service';
 import { Router } from '@angular/router';
 import { User } from '../../../models/user.model';
@@ -10,10 +18,13 @@ import { User } from '../../../models/user.model';
   selector: 'app-header',
   templateUrl: './header.component.html',
   styleUrls: ['./header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class HeaderComponent {
+  private readonly cdr = inject(ChangeDetectorRef);
+
   @Output() toggleSidebar = new EventEmitter<void>();
 
   currentUser: User | null;
@@ -31,6 +42,7 @@ export class HeaderComponent {
     this.currentUser = this.authService.getCurrentUser();
     this.authService.currentUser$.subscribe((user) => {
       this.currentUser = user;
+      this.cdr.markForCheck();
     });
   }
 

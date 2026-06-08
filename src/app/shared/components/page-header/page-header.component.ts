@@ -1,5 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
+import { MatIconModule } from '@angular/material/icon';
+
 /**
  * Page title bar with optional subtitle and Material icon.
  *
@@ -12,8 +14,9 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
   selector: 'app-page-header',
   templateUrl: './page-header.component.html',
   styleUrls: ['./page-header.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatIconModule]
 })
 export class PageHeaderComponent {
   /** Primary page heading. */

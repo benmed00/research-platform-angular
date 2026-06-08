@@ -1,14 +1,14 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import {
-  configureFeatureModuleTest,
+  configureStandaloneComponentTest,
   createMockUser,
   spyAuthService,
   spyRouter
 } from '../../../../testing/test-helpers';
 import { of } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
-import { LayoutModule } from '../../layout.module';
+
 import { HeaderComponent } from './header.component';
 
 describe('HeaderComponent', () => {
@@ -22,7 +22,7 @@ describe('HeaderComponent', () => {
     vi.mocked(authService.getCurrentUser).mockReturnValue(createMockUser());
     router = spyRouter();
 
-    await configureFeatureModuleTest(LayoutModule);
+    await configureStandaloneComponentTest(HeaderComponent);
     TestBed.overrideProvider(AuthService, { useValue: authService });
     TestBed.overrideProvider(Router, { useValue: router });
 

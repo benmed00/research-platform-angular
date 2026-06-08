@@ -1,13 +1,13 @@
-import { Type } from '@angular/core';
+import { Provider, Type } from '@angular/core';
 import { TestBed } from '@angular/core/testing';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
-import { SharedModule } from '../app/shared/shared.module';
 import { Permission, User, UserRole } from '../app/models/user.model';
-import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { Router } from '@angular/router';
 import { AuthService } from '../app/core/services/auth.service';
+import { authInterceptor } from '../app/core/interceptors/auth.interceptor';
 import { Observable, of } from 'rxjs';
 
 /** Vitest spy-backed partial {@link AuthService} for unit tests. */
@@ -41,11 +41,12 @@ export function spyAuthService(partial: Partial<SpyAuthService> = {}): AuthServi
 /**
  * Creates a Vitest spy object cast as {@link Router} for TestBed providers.
  *
- * @returns Router-shaped spy with a `navigate` mock
+ * @returns Router-shaped spy with `navigate` and `createUrlTree` mocks
  */
 export function spyRouter(): Router {
   return {
-    navigate: vi.fn().mockResolvedValue(true)
+    navigate: vi.fn().mockResolvedValue(true),
+    createUrlTree: vi.fn((commands: unknown[], extras?: unknown) => ({ commands, extras }))
   } as unknown as Router;
 }
 
@@ -182,28 +183,22 @@ export function createMockUser(overrides: MockUserOverrides = {}): User {
 }
 
 /**
- * Configures TestBed for a feature module smoke test (SharedModule + HTTP + router stubs).
+ * Configures TestBed for a standalone component (HTTP client, animations, router stubs).
  *
- * @param moduleType - Angular module class to import into TestBed
+ * @param component - Standalone component class to import into TestBed
+ * @param providers - Optional extra TestBed providers (e.g. mocked AuthService)
  * @returns Resolves when TestBed compilation completes
  */
-export async function configureFeatureModuleTest(moduleType: Type<unknown>): Promise<void> {
+export async function configureStandaloneComponentTest(
+  component: Type<unknown>,
+  providers: Provider[] = []
+): Promise<void> {
   await TestBed.configureTestingModule({
-    imports: [moduleType, NoopAnimationsModule, RouterTestingModule],
-    providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
-  }).compileComponents();
-}
-
-/**
- * Configures TestBed for a declared component with SharedModule dependencies.
- *
- * @param component - Component class to declare in TestBed
- * @returns Resolves when TestBed compilation completes
- */
-export async function configureSharedComponentTest(component: Type<unknown>): Promise<void> {
-  await TestBed.configureTestingModule({
-    declarations: [component],
-    imports: [SharedModule, NoopAnimationsModule, RouterTestingModule],
-    providers: [provideHttpClient(withXhr(), withInterceptorsFromDi()), provideHttpClientTesting()]
+    imports: [component, NoopAnimationsModule, RouterTestingModule],
+    providers: [
+      provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
+      provideHttpClientTesting(),
+      ...providers
+    ]
   }).compileComponents();
 }

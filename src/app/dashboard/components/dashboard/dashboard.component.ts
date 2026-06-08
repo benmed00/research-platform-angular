@@ -1,4 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject
+} from '@angular/core';
+import { SHARED_IMPORTS } from '../../../shared/shared-imports';
 import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { User, UserRole } from '../../../models/user.model';
@@ -19,10 +26,13 @@ export interface DashboardStat {
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
   styleUrls: ['./dashboard.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class DashboardComponent implements OnInit {
+  private readonly cdr = inject(ChangeDetectorRef);
+
   currentUser: User | null = null;
   stats: DashboardStat[] = [];
   loading = false;
@@ -55,14 +65,17 @@ export class DashboardComponent implements OnInit {
    */
   loadDashboardData(): void {
     this.loading = true;
+    this.cdr.markForCheck();
     this.apiService.get<DashboardStat[]>('/dashboard/stats').subscribe({
       next: (stats) => {
         this.stats = stats;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.stats = [];
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }

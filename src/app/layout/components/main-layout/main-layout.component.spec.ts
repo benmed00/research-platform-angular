@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { configureFeatureModuleTest } from '../../../../testing/test-helpers';
-import { LayoutModule } from '../../layout.module';
+import { configureStandaloneComponentTest } from '../../../../testing/test-helpers';
+
 import { MainLayoutComponent } from './main-layout.component';
 
 describe('MainLayoutComponent', () => {
@@ -8,7 +8,7 @@ describe('MainLayoutComponent', () => {
   let fixture: ComponentFixture<MainLayoutComponent>;
 
   beforeEach(async () => {
-    await configureFeatureModuleTest(LayoutModule);
+    await configureStandaloneComponentTest(MainLayoutComponent);
     fixture = TestBed.createComponent(MainLayoutComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();

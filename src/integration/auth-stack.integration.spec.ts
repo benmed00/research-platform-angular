@@ -1,22 +1,14 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HTTP_INTERCEPTORS,
-  HttpClient,
-  provideHttpClient,
-  withInterceptorsFromDi,
-  withXhr
-} from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { LoginComponent } from '../app/auth/components/login/login.component';
-import { AuthInterceptor } from '../app/core/interceptors/auth.interceptor';
+import { authInterceptor } from '../app/core/interceptors/auth.interceptor';
 import { ApiService } from '../app/core/services/api.service';
 import { AuthService } from '../app/core/services/auth.service';
 import { User } from '../app/models/user.model';
-import { SharedModule } from '../app/shared/shared.module';
 import {
   createMockApiLoginResponse,
   createMockApiUsers,
@@ -31,13 +23,11 @@ describe('Integration: Auth stack (login → token → API)', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [LoginComponent],
-      imports: [ReactiveFormsModule, SharedModule, NoopAnimationsModule, RouterTestingModule],
+      imports: [LoginComponent, NoopAnimationsModule, RouterTestingModule],
       providers: [
         AuthService,
         ApiService,
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
         provideHttpClientTesting()
       ]
     }).compileComponents();

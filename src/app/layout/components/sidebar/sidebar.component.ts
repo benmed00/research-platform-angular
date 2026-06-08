@@ -1,4 +1,5 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { SHARED_IMPORTS } from '../../../shared/shared-imports';
 import { UserRole } from '../../../models/user.model';
 import { AuthService } from '../../../core/services/auth.service';
 
@@ -19,8 +20,9 @@ interface MenuItem {
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
   styleUrls: ['./sidebar.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class SidebarComponent {
   @Input() isOpen: boolean = true;

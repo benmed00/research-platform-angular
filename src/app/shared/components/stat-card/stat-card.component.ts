@@ -1,5 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
+import { MatIconModule } from '@angular/material/icon';
+
 /** Trend indicator shown on a {@link StatCardComponent}. */
 export interface StatCardTrend {
   value: number;
@@ -23,8 +25,9 @@ export interface StatCardTrend {
   selector: 'app-stat-card',
   templateUrl: './stat-card.component.html',
   styleUrls: ['./stat-card.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [MatIconModule]
 })
 export class StatCardComponent {
   /** Metric label. */

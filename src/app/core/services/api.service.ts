@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
 
 /** Query string values accepted by {@link ApiService.get}. */
@@ -28,22 +27,12 @@ export class ApiService {
    * @param http - Angular HTTP client for API requests
    * @param authService - Provides the JWT attached to each request
    */
-  constructor(
-    private http: HttpClient,
-    private authService: AuthService
-  ) {}
+  constructor(private http: HttpClient) {}
 
   private getHeaders(): HttpHeaders {
-    const token = this.authService.getToken();
-    let headers = new HttpHeaders({
+    return new HttpHeaders({
       'Content-Type': 'application/json'
     });
-
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-
-    return headers;
   }
 
   /**
@@ -127,14 +116,6 @@ export class ApiService {
       });
     }
 
-    const token = this.authService.getToken();
-    let headers = new HttpHeaders();
-    if (token) {
-      headers = headers.set('Authorization', `Bearer ${token}`);
-    }
-
-    return this.http.post(`${this.baseUrl}${endpoint}`, formData, {
-      headers
-    });
+    return this.http.post(`${this.baseUrl}${endpoint}`, formData);
   }
 }

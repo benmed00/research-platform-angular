@@ -1,4 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject
+} from '@angular/core';
+import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
 import { ApiService } from '../../../../core/services/api.service';
 
 export interface EquipmentListItem {
@@ -15,10 +22,13 @@ export interface EquipmentListItem {
   selector: 'app-equipment-list',
   templateUrl: './equipment-list.component.html',
   styleUrls: ['./equipment-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class EquipmentListComponent implements OnInit {
+  private readonly cdr = inject(ChangeDetectorRef);
+
   equipment: EquipmentListItem[] = [];
   loading = false;
   displayedColumns = ['name', 'category', 'status'];
@@ -51,14 +61,17 @@ export class EquipmentListComponent implements OnInit {
    */
   loadEquipment(): void {
     this.loading = true;
+    this.cdr.markForCheck();
     this.apiService.get<EquipmentListItem[]>('/equipment').subscribe({
       next: (equipment) => {
         this.equipment = equipment;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.equipment = [];
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }

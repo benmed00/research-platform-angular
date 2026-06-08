@@ -1,13 +1,10 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { RouterTestingModule } from '@angular/router/testing';
 import { of, throwError } from 'rxjs';
-import { SharedModule } from '../../../shared/shared.module';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginComponent } from './login.component';
 import {
+  configureStandaloneComponentTest,
   createJwt,
   createMockUser,
   spyAuthService,
@@ -24,14 +21,10 @@ describe('LoginComponent', () => {
     authService = spyAuthService();
     router = spyRouter();
 
-    await TestBed.configureTestingModule({
-      declarations: [LoginComponent],
-      imports: [ReactiveFormsModule, SharedModule, NoopAnimationsModule, RouterTestingModule],
-      providers: [
-        { provide: AuthService, useValue: authService },
-        { provide: Router, useValue: router }
-      ]
-    }).compileComponents();
+    await configureStandaloneComponentTest(LoginComponent, [
+      { provide: AuthService, useValue: authService },
+      { provide: Router, useValue: router }
+    ]);
 
     fixture = TestBed.createComponent(LoginComponent);
     component = fixture.componentInstance;

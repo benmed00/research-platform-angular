@@ -1,4 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject
+} from '@angular/core';
+import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
 import { ApiService } from '../../../../core/services/api.service';
 
 export interface EmployeeListItem {
@@ -17,10 +24,13 @@ export interface EmployeeListItem {
   selector: 'app-employees-list',
   templateUrl: './employees-list.component.html',
   styleUrls: ['./employees-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class EmployeesListComponent implements OnInit {
+  private readonly cdr = inject(ChangeDetectorRef);
+
   employees: EmployeeListItem[] = [];
   loading = false;
   displayedColumns = ['firstName', 'lastName', 'position', 'department', 'status'];
@@ -55,14 +65,17 @@ export class EmployeesListComponent implements OnInit {
    */
   loadEmployees(): void {
     this.loading = true;
+    this.cdr.markForCheck();
     this.apiService.get<EmployeeListItem[]>('/employees').subscribe({
       next: (employees) => {
         this.employees = employees;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.employees = [];
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }

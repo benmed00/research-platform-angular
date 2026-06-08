@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
 
 /**
  * Accounting module dashboard for budgets, invoices, and financial reports.
@@ -10,7 +11,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'app-accounting-dashboard',
   templateUrl: './accounting-dashboard.component.html',
   styleUrls: ['./accounting-dashboard.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class AccountingDashboardComponent {}

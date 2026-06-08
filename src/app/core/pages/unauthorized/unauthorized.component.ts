@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { SHARED_IMPORTS } from '../../../shared/shared-imports';
 import { Router } from '@angular/router';
 
 /**
@@ -8,8 +9,9 @@ import { Router } from '@angular/router';
   selector: 'app-unauthorized',
   templateUrl: './unauthorized.component.html',
   styleUrls: ['./unauthorized.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class UnauthorizedComponent {
   /**

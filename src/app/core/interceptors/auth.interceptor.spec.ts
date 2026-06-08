@@ -1,17 +1,11 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HTTP_INTERCEPTORS,
-  HttpClient,
-  provideHttpClient,
-  withInterceptorsFromDi,
-  withXhr
-} from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { AuthInterceptor } from './auth.interceptor';
+import { authInterceptor } from './auth.interceptor';
 import { AuthService } from '../services/auth.service';
 import { spyAuthService } from '../../../testing/test-helpers';
 
-describe('AuthInterceptor', () => {
+describe('authInterceptor', () => {
   let http: HttpClient;
   let httpMock: HttpTestingController;
   let authService: AuthService;
@@ -20,11 +14,9 @@ describe('AuthInterceptor', () => {
     authService = spyAuthService();
 
     TestBed.configureTestingModule({
-      imports: [],
       providers: [
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
         { provide: AuthService, useValue: authService },
-        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
         provideHttpClientTesting()
       ]
     });

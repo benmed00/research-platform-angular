@@ -1,4 +1,11 @@
-import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  ChangeDetectionStrategy,
+  inject
+} from '@angular/core';
+import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
 import { ApiService } from '../../../../core/services/api.service';
 import { User } from '../../../../models/user.model';
 
@@ -9,10 +16,13 @@ import { User } from '../../../../models/user.model';
   selector: 'app-users-list',
   templateUrl: './users-list.component.html',
   styleUrls: ['./users-list.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class UsersListComponent implements OnInit {
+  private readonly cdr = inject(ChangeDetectorRef);
+
   users: User[] = [];
   loading = false;
   displayedColumns = ['firstName', 'lastName', 'email', 'role', 'status'];
@@ -47,14 +57,17 @@ export class UsersListComponent implements OnInit {
    */
   loadUsers(): void {
     this.loading = true;
+    this.cdr.markForCheck();
     this.apiService.get<User[]>('/users').subscribe({
       next: (users) => {
         this.users = users;
         this.loading = false;
+        this.cdr.markForCheck();
       },
       error: () => {
         this.users = [];
         this.loading = false;
+        this.cdr.markForCheck();
       }
     });
   }

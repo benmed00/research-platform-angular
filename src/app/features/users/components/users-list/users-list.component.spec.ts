@@ -1,8 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-import { configureFeatureModuleTest } from '../../../../../testing/test-helpers';
+import { configureStandaloneComponentTest } from '../../../../../testing/test-helpers';
 import { createMockApiUsers } from '../../../../../testing/mock-api.fixtures';
-import { UsersModule } from '../../users.module';
 import { UsersListComponent } from './users-list.component';
 
 describe('UsersListComponent', () => {
@@ -11,7 +10,7 @@ describe('UsersListComponent', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
-    await configureFeatureModuleTest(UsersModule);
+    await configureStandaloneComponentTest(UsersListComponent);
     httpMock = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(UsersListComponent);
     component = fixture.componentInstance;

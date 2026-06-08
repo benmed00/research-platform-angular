@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
 
 /**
  * Publishing module dashboard for managing reports and exports.
@@ -10,7 +11,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'app-publishing-dashboard',
   templateUrl: './publishing-dashboard.component.html',
   styleUrls: ['./publishing-dashboard.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class PublishingDashboardComponent {}

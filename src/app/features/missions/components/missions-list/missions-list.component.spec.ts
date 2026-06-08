@@ -1,8 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-import { configureFeatureModuleTest } from '../../../../../testing/test-helpers';
+import { configureStandaloneComponentTest } from '../../../../../testing/test-helpers';
 import { createMockMissions } from '../../../../../testing/mock-api.fixtures';
-import { MissionsModule } from '../../missions.module';
+
 import { MissionsListComponent } from './missions-list.component';
 
 describe('MissionsListComponent', () => {
@@ -11,7 +11,7 @@ describe('MissionsListComponent', () => {
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
-    await configureFeatureModuleTest(MissionsModule);
+    await configureStandaloneComponentTest(MissionsListComponent);
     httpMock = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(MissionsListComponent);
     component = fixture.componentInstance;

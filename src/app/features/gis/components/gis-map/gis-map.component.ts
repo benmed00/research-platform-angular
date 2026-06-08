@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
 
 /**
  * Interactive GIS map view powered by Leaflet.
@@ -10,7 +11,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'app-gis-map',
   templateUrl: './gis-map.component.html',
   styleUrls: ['./gis-map.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class GisMapComponent {}

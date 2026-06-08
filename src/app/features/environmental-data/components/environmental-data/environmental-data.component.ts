@@ -1,4 +1,5 @@
 import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
 
 /**
  * Environmental monitoring data explorer and time-series viewer.
@@ -10,7 +11,8 @@ import { Component, ChangeDetectionStrategy } from '@angular/core';
   selector: 'app-environmental-data',
   templateUrl: './environmental-data.component.html',
   styleUrls: ['./environmental-data.component.scss'],
-  changeDetection: ChangeDetectionStrategy.Eager,
-  standalone: false
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  standalone: true,
+  imports: [SHARED_IMPORTS]
 })
 export class EnvironmentalDataComponent {}

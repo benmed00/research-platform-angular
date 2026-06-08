@@ -1,12 +1,12 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import {
-  configureFeatureModuleTest,
+  configureStandaloneComponentTest,
   createMockUser,
   spyAuthService
 } from '../../../../testing/test-helpers';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserRole } from '../../../models/user.model';
-import { LayoutModule } from '../../layout.module';
+
 import { SidebarComponent } from './sidebar.component';
 
 describe('SidebarComponent', () => {
@@ -17,7 +17,7 @@ describe('SidebarComponent', () => {
   beforeEach(async () => {
     authService = spyAuthService();
 
-    await configureFeatureModuleTest(LayoutModule);
+    await configureStandaloneComponentTest(SidebarComponent);
     TestBed.overrideProvider(AuthService, { useValue: authService });
 
     fixture = TestBed.createComponent(SidebarComponent);

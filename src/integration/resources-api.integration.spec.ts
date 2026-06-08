@@ -1,13 +1,7 @@
 import { TestBed } from '@angular/core/testing';
-import {
-  HTTP_INTERCEPTORS,
-  HttpClient,
-  provideHttpClient,
-  withInterceptorsFromDi,
-  withXhr
-} from '@angular/common/http';
+import { HttpClient, provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
-import { AuthInterceptor } from '../app/core/interceptors/auth.interceptor';
+import { authInterceptor } from '../app/core/interceptors/auth.interceptor';
 import { ApiService } from '../app/core/services/api.service';
 import { AuthService } from '../app/core/services/auth.service';
 import {
@@ -31,8 +25,7 @@ describe('Integration: Protected resource APIs', () => {
       providers: [
         AuthService,
         ApiService,
-        { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
-        provideHttpClient(withXhr(), withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptors([authInterceptor])),
         provideHttpClientTesting()
       ]
     });
