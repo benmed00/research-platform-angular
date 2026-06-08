@@ -1,0 +1,40 @@
+<div class="dashboard-container">
+  <app-page-header
+    [title]="getDashboardTitle()"
+    [subtitle]="'Vue d\'ensemble de la plateforme'"
+    icon="dashboard"
+  >
+  </app-page-header>
+
+  <div class="stats-grid">
+    <app-stat-card
+      *ngFor="let stat of stats"
+      [title]="stat.title"
+      [value]="stat.value"
+      [icon]="stat.icon"
+      [color]="stat.color"
+      [trend]="stat.trend"
+    >
+    </app-stat-card>
+  </div>
+
+  <div class="dashboard-content">
+    <mat-card class="dashboard-card">
+      <mat-card-header>
+        <mat-card-title>Activités récentes</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Les activités récentes seront affichées ici.</p>
+      </mat-card-content>
+    </mat-card>
+
+    <mat-card class="dashboard-card">
+      <mat-card-header>
+        <mat-card-title>Missions en cours</mat-card-title>
+      </mat-card-header>
+      <mat-card-content>
+        <p>Les missions en cours seront affichées ici.</p>
+      </mat-card-content>
+    </mat-card>
+  </div>
+</div>
