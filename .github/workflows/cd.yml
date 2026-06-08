@@ -1,0 +1,83 @@
+name: CD
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+  workflow_dispatch:
+    inputs:
+      environment:
+        description: Target deployment environment
+        required: true
+        default: staging
+        type: choice
+        options:
+          - staging
+          - production
+
+concurrency:
+  group: cd-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  build-artifact:
+    name: Build and publish artifact
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run quality gate
+        run: pnpm run validate
+        env:
+          CI: true
+
+      - name: Build production bundle
+        run: pnpm run build
+
+      - name: Package distribution artifact
+        run: |
+          tar -czf research-platform-dist.tar.gz -C dist research-platform
+
+      - name: Upload distribution artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: research-platform-${{ github.sha }}
+          path: research-platform-dist.tar.gz
+          retention-days: 30
+
+  deploy:
+    name: Deploy to environment
+    needs: build-artifact
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' || startsWith(github.ref, 'refs/tags/v')
+    environment:
+      name: ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'production' }}
+
+    steps:
+      - name: Download distribution artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: research-platform-${{ github.sha }}
+
+      - name: Prepare deployment placeholder
+        run: |
+          echo "Artifact ready for deployment to ${{ github.event_name == 'workflow_dispatch' && inputs.environment || 'production' }}."
+          echo "Integrate your hosting provider step here (S3, Azure Static Web Apps, Netlify, etc.)."
+          ls -lh research-platform-dist.tar.gz
