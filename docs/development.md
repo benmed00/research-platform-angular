@@ -25,24 +25,24 @@ pnpm install
 
 ## Daily workflow
 
-### 1. Start the mock API
-
-```bash
-pnpm run mock-api
-```
-
-Runs on `http://localhost:3000`. See [Mock API](./mock-api.md) for accounts and endpoints.
-
-### 2. Start the Angular dev server
+### 1. Start the full local stack
 
 ```bash
 pnpm start
 ```
 
-- App: `http://localhost:4200`
-- API requests to `/api/*` are proxied to the mock server via `proxy.conf.json`
+Starts the mock API (`http://localhost:3000`) and the Angular dev server (`http://localhost:4200`) in one terminal. API requests to `/api/*` are proxied to the mock server via `proxy.conf.json`.
 
-### 3. Run quality gates before committing
+See [Mock API](./mock-api.md) for test accounts and endpoints.
+
+To run services separately:
+
+```bash
+pnpm run mock-api   # API only
+pnpm run serve      # Angular only (requires API elsewhere for login)
+```
+
+### 2. Run quality gates before committing
 
 Pre-commit hooks run automatically (format, lint, build, test). To verify manually:
 
@@ -54,21 +54,22 @@ See [Contributing](./contributing.md) for commit message conventions.
 
 ## pnpm scripts
 
-| Script                   | Purpose                                 |
-| ------------------------ | --------------------------------------- |
-| `pnpm start`             | Dev server with hot reload              |
-| `pnpm run mock-api`      | Local mock REST API                     |
-| `pnpm run build`         | Production build                        |
-| `pnpm run watch`         | Dev build in watch mode                 |
-| `pnpm test`              | Unit tests (watch + Chrome)             |
-| `pnpm run test:watch`    | Alias for `pnpm test`                   |
-| `pnpm run test:ci`       | Headless tests for CI                   |
-| `pnpm run test:coverage` | Headless tests + coverage report        |
-| `pnpm run lint`          | ESLint (TypeScript + templates)         |
-| `pnpm run lint:fix`      | ESLint with auto-fix                    |
-| `pnpm run format`        | Prettier write                          |
-| `pnpm run format:check`  | Prettier check (CI and pre-commit)      |
-| `pnpm run validate`      | Full gate: format, lint, build, test:ci |
+| Script                   | Purpose                                   |
+| ------------------------ | ----------------------------------------- |
+| `pnpm start`             | Mock API + dev server (nominal dev stack) |
+| `pnpm run serve`         | Angular dev server only                   |
+| `pnpm run mock-api`      | Local mock REST API only                  |
+| `pnpm run build`         | Production build                          |
+| `pnpm run watch`         | Dev build in watch mode                   |
+| `pnpm test`              | Unit tests (watch + Chrome)               |
+| `pnpm run test:watch`    | Alias for `pnpm test`                     |
+| `pnpm run test:ci`       | Headless tests for CI                     |
+| `pnpm run test:coverage` | Headless tests + coverage report          |
+| `pnpm run lint`          | ESLint (TypeScript + templates)           |
+| `pnpm run lint:fix`      | ESLint with auto-fix                      |
+| `pnpm run format`        | Prettier write                            |
+| `pnpm run format:check`  | Prettier check (CI and pre-commit)        |
+| `pnpm run validate`      | Full gate: format, lint, build, test:ci   |
 
 ## Project layout
 
@@ -125,9 +126,9 @@ Password for all mock accounts: `password123`
 
 ## Troubleshooting
 
-| Problem                        | Fix                                                        |
-| ------------------------------ | ---------------------------------------------------------- |
-| Login fails with network error | Ensure `pnpm run mock-api` is running                      |
-| `EADDRINUSE` on port 3000      | Stop other process or change port in `mock-api/server.cjs` |
-| Blank Material styles          | Check `src/styles.scss` includes Material theme            |
-| 404 on feature route           | Verify lazy route in `layout-routing.module.ts`            |
+| Problem                        | Fix                                                                                                             |
+| ------------------------------ | --------------------------------------------------------------------------------------------------------------- |
+| Login fails with network error | Use `pnpm start` or ensure `pnpm run mock-api` is running                                                       |
+| `EADDRINUSE` on port 3000      | `pnpm start` reuses a healthy mock API; otherwise `netstat -ano \| findstr :3000` then `taskkill /PID <pid> /F` |
+| Blank Material styles          | Check `src/styles.scss` includes Material theme                                                                 |
+| 404 on feature route           | Verify lazy route in `layout-routing.module.ts`                                                                 |

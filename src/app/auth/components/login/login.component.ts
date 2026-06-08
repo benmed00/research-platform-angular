@@ -3,6 +3,9 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 
+/**
+ * Login form that authenticates users via AuthService.
+ */
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -13,6 +16,13 @@ export class LoginComponent {
   loading = false;
   error = '';
 
+  /**
+   * Injects the reactive form builder, auth service, and router.
+   *
+   * @param fb - Builds the reactive login form
+   * @param authService - Performs credential authentication
+   * @param router - Navigates to dashboard on success
+   */
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
@@ -24,6 +34,11 @@ export class LoginComponent {
     });
   }
 
+  /**
+   * Submits the login form when valid and navigates to the dashboard on success.
+   *
+   * @returns Nothing.
+   */
   onSubmit(): void {
     if (this.loginForm.valid) {
       this.loading = true;

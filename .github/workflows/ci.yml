@@ -43,7 +43,13 @@ jobs:
       - name: Build production bundle
         run: pnpm run build
 
-      - name: Run unit tests
+      - name: Run mock API tests
+        run: pnpm run test:mock-api
+
+      - name: Run E2E smoke test
+        run: pnpm run test:e2e
+
+      - name: Run unit and integration tests
         run: pnpm run test:ci
         env:
           CI: true

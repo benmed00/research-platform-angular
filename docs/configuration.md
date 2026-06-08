@@ -17,11 +17,17 @@
 Browser  →  /api/auth/login  →  proxy.conf.json  →  localhost:3000
 ```
 
-Start both:
+Start both (recommended):
+
+```bash
+pnpm start
+```
+
+Or run each service in its own terminal:
 
 ```bash
 pnpm run mock-api
-pnpm start
+pnpm run serve
 ```
 
 ### Direct mock API (no proxy)

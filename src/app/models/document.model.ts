@@ -1,3 +1,8 @@
+/**
+ * @file Document management, versioning, and access control domain types.
+ */
+
+/** Managed document with versioning and access rights. */
 export interface Document {
   id: string;
   title: string;
@@ -10,16 +15,20 @@ export interface Document {
   mimeType: string;
   version: number;
   currentVersion: boolean;
-  parentId?: string; // For versioning
+  /** Parent document ID when this record is a version revision. */
+  parentId?: string;
   tags: string[];
   metadata: DocumentMetadata;
   accessRights: AccessRights;
   createdAt: Date;
   updatedAt: Date;
+  /** User ID of the document creator. */
   createdBy: string;
+  /** User ID of the last editor. */
   updatedBy: string;
 }
 
+/** Scientific or administrative document classification. */
 export enum DocumentType {
   SCIENTIFIC_REPORT = 'SCIENTIFIC_REPORT',
   ADMINISTRATIVE_REPORT = 'ADMINISTRATIVE_REPORT',
@@ -30,6 +39,7 @@ export enum DocumentType {
   OTHER = 'OTHER'
 }
 
+/** Organizational category for document filing. */
 export enum DocumentCategory {
   RESEARCH = 'RESEARCH',
   ADMINISTRATION = 'ADMINISTRATION',
@@ -39,6 +49,7 @@ export enum DocumentCategory {
   PUBLICATIONS = 'PUBLICATIONS'
 }
 
+/** Bibliographic and project metadata attached to a document. */
 export interface DocumentMetadata {
   authors?: string[];
   year?: number;
@@ -51,6 +62,7 @@ export interface DocumentMetadata {
   isbn?: string;
 }
 
+/** Role- and user-based access control for a document. */
 export interface AccessRights {
   public: boolean;
   roles: string[];
@@ -58,6 +70,7 @@ export interface AccessRights {
   permissions: Permission[];
 }
 
+/** Document-level permission flags (distinct from auth permissions in user.model). */
 export enum Permission {
   READ = 'READ',
   DOWNLOAD = 'DOWNLOAD',
@@ -65,6 +78,7 @@ export enum Permission {
   DELETE = 'DELETE'
 }
 
+/** Immutable snapshot of a prior document version. */
 export interface DocumentVersion {
   id: string;
   documentId: string;
@@ -72,5 +86,6 @@ export interface DocumentVersion {
   fileUrl: string;
   changeLog: string;
   createdAt: Date;
+  /** User ID of the version author. */
   createdBy: string;
 }

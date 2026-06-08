@@ -1,3 +1,8 @@
+/**
+ * @file Budget, invoicing, payments, and financial reporting domain types.
+ */
+
+/** Annual or project budget with allocated and spent amounts. */
 export interface Budget {
   id: string;
   year: number;
@@ -10,6 +15,7 @@ export interface Budget {
   transactions: Transaction[];
 }
 
+/** Budget line classification. */
 export enum BudgetCategory {
   SALARIES = 'SALARIES',
   EQUIPMENT = 'EQUIPMENT',
@@ -21,6 +27,7 @@ export enum BudgetCategory {
   OTHER = 'OTHER'
 }
 
+/** Financial transaction debiting or crediting a budget. */
 export interface Transaction {
   id: string;
   type: TransactionType;
@@ -31,14 +38,17 @@ export interface Transaction {
   budgetId: string;
   invoiceId?: string;
   paymentId?: string;
+  /** User ID of the transaction creator. */
   createdBy: string;
 }
 
+/** Direction of a financial transaction. */
 export enum TransactionType {
   INCOME = 'INCOME',
   EXPENSE = 'EXPENSE'
 }
 
+/** External funding grant tracked against project budgets. */
 export interface Subvention {
   id: string;
   name: string;
@@ -51,6 +61,7 @@ export interface Subvention {
   reports: Report[];
 }
 
+/** Lifecycle state of a funding subvention. */
 export enum SubventionStatus {
   PENDING = 'PENDING',
   APPROVED = 'APPROVED',
@@ -59,6 +70,7 @@ export enum SubventionStatus {
   CANCELLED = 'CANCELLED'
 }
 
+/** Supplier invoice awaiting or confirming payment. */
 export interface Invoice {
   id: string;
   invoiceNumber: string;
@@ -73,6 +85,7 @@ export interface Invoice {
   fileUrl?: string;
 }
 
+/** Payment workflow state of an invoice. */
 export enum InvoiceStatus {
   DRAFT = 'DRAFT',
   PENDING = 'PENDING',
@@ -81,6 +94,7 @@ export enum InvoiceStatus {
   CANCELLED = 'CANCELLED'
 }
 
+/** Line item on a supplier invoice. */
 export interface InvoiceItem {
   description: string;
   quantity: number;
@@ -88,6 +102,7 @@ export interface InvoiceItem {
   total: number;
 }
 
+/** Payment applied against an invoice. */
 export interface Payment {
   id: string;
   invoiceId: string;
@@ -98,6 +113,7 @@ export interface Payment {
   notes?: string;
 }
 
+/** Method used to settle an invoice. */
 export enum PaymentMethod {
   BANK_TRANSFER = 'BANK_TRANSFER',
   CHECK = 'CHECK',
@@ -105,6 +121,7 @@ export enum PaymentMethod {
   CREDIT_CARD = 'CREDIT_CARD'
 }
 
+/** Vendor or service provider referenced by invoices. */
 export interface Supplier {
   id: string;
   name: string;
@@ -115,6 +132,7 @@ export interface Supplier {
   taxId?: string;
 }
 
+/** Generated financial or budget report file. */
 export interface Report {
   id: string;
   type: ReportType;
@@ -124,6 +142,7 @@ export interface Report {
   format: ReportFormat;
 }
 
+/** Category of financial report. */
 export enum ReportType {
   FINANCIAL = 'FINANCIAL',
   BUDGET = 'BUDGET',
@@ -131,6 +150,7 @@ export enum ReportType {
   EXPENSE = 'EXPENSE'
 }
 
+/** Export format of a generated report. */
 export enum ReportFormat {
   PDF = 'PDF',
   EXCEL = 'EXCEL',

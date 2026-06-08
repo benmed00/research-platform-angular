@@ -1,3 +1,8 @@
+/**
+ * @file Equipment inventory, maintenance, and assignment domain types.
+ */
+
+/** Research equipment asset tracked in the platform inventory. */
 export interface Equipment {
   id: string;
   name: string;
@@ -5,17 +10,21 @@ export interface Equipment {
   serialNumber?: string;
   purchaseDate: Date;
   purchasePrice: number;
-  lifespan?: number; // in months
+  /** Expected useful life, in months. */
+  lifespan?: number;
   currentValue: number;
   status: EquipmentStatus;
   location?: string;
-  assignedTo?: string; // User ID
-  assignedToMission?: string; // Mission ID
+  /** Assigned platform user ID. */
+  assignedTo?: string;
+  /** Assigned mission ID. */
+  assignedToMission?: string;
   maintenanceRecords: MaintenanceRecord[];
   specifications?: Record<string, unknown>;
   photos?: string[];
 }
 
+/** High-level equipment classification. */
 export enum EquipmentCategory {
   VEHICLE = 'VEHICLE',
   BOAT = 'BOAT',
@@ -25,6 +34,7 @@ export enum EquipmentCategory {
   LABORATORY = 'LABORATORY'
 }
 
+/** Operational status of an equipment asset. */
 export enum EquipmentStatus {
   AVAILABLE = 'AVAILABLE',
   IN_USE = 'IN_USE',
@@ -33,6 +43,7 @@ export enum EquipmentStatus {
   DAMAGED = 'DAMAGED'
 }
 
+/** Maintenance or inspection event for an equipment asset. */
 export interface MaintenanceRecord {
   id: string;
   equipmentId: string;
@@ -45,6 +56,7 @@ export interface MaintenanceRecord {
   documents?: string[];
 }
 
+/** Category of maintenance performed on equipment. */
 export enum MaintenanceType {
   PREVENTIVE = 'PREVENTIVE',
   CORRECTIVE = 'CORRECTIVE',
@@ -52,6 +64,7 @@ export enum MaintenanceType {
   UPGRADE = 'UPGRADE'
 }
 
+/** Land vehicle extending the base {@link Equipment} record. */
 export interface Vehicle extends Equipment {
   make: string;
   model: string;
@@ -61,6 +74,7 @@ export interface Vehicle extends Equipment {
   fuelType: string;
 }
 
+/** Marine vessel extending the base {@link Equipment} record. */
 export interface Boat extends Equipment {
   name: string;
   registrationNumber: string;

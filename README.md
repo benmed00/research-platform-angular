@@ -8,22 +8,22 @@ Requires [pnpm](https://pnpm.io/) 9+ (`corepack enable && corepack install` uses
 
 ```bash
 pnpm install
-pnpm run mock-api   # terminal 1
-pnpm start          # terminal 2
+pnpm start
 ```
 
 Open `http://localhost:4200` — login with `admin@research.local` / `password123`.
 
 ## Commands
 
-| Command                  | Description                              |
-| ------------------------ | ---------------------------------------- |
-| `pnpm run mock-api`      | Mock API on port 3000                    |
-| `pnpm start`             | Dev server on port 4200 (proxies `/api`) |
-| `pnpm run build`         | Production build                         |
-| `pnpm test`              | Unit tests (watch)                       |
-| `pnpm run test:ci`       | Headless tests for CI                    |
-| `pnpm run test:coverage` | Tests + HTML coverage report             |
+| Command                  | Description                            |
+| ------------------------ | -------------------------------------- |
+| `pnpm start`             | Mock API + dev server (usage nominale) |
+| `pnpm run serve`         | Angular dev server only (port 4200)    |
+| `pnpm run mock-api`      | Mock API only (port 3000)              |
+| `pnpm run build`         | Production build                       |
+| `pnpm test`              | Unit tests (watch)                     |
+| `pnpm run test:ci`       | Headless tests for CI                  |
+| `pnpm run test:coverage` | Tests + HTML coverage report           |
 
 ## Documentation
 

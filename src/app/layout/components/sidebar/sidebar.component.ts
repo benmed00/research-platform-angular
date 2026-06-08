@@ -10,6 +10,11 @@ interface MenuItem {
   children?: MenuItem[];
 }
 
+/**
+ * Navigation sidebar with role-based menu filtering.
+ *
+ * @remarks Hiding menu items is not sufficient for access control — routes must use RoleGuard.
+ */
 @Component({
   selector: 'app-sidebar',
   templateUrl: './sidebar.component.html',
@@ -78,8 +83,18 @@ export class SidebarComponent {
     }
   ];
 
+  /**
+   * Injects the auth service for role-based menu filtering.
+   *
+   * @param authService - Provides the current user for role-based filtering
+   */
   constructor(private authService: AuthService) {}
 
+  /**
+   * Returns menu items visible to the current user based on role restrictions.
+   *
+   * @returns Filtered menu items; empty when no user is logged in
+   */
   getVisibleMenuItems(): MenuItem[] {
     const user = this.authService.getCurrentUser();
     if (!user) return [];

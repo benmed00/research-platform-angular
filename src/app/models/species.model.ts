@@ -1,8 +1,14 @@
+/**
+ * @file Species catalog, taxonomy, and observation domain types.
+ */
+
+/** Catalogued species with taxonomy, conservation status, and observations. */
 export interface Species {
   id: string;
   scientificName: string;
   commonName: string;
-  commonNameAr?: string; // Arabic name
+  /** Arabic common name. */
+  commonNameAr?: string;
   kingdom: Kingdom;
   category: SpeciesCategory;
   iucnStatus: IUCNStatus;
@@ -14,9 +20,11 @@ export interface Species {
   notes?: string;
   createdAt: Date;
   updatedAt: Date;
+  /** User ID of the catalog entry creator. */
   createdBy: string;
 }
 
+/** Biological kingdom classification. */
 export enum Kingdom {
   ANIMALIA = 'ANIMALIA',
   PLANTAE = 'PLANTAE',
@@ -25,6 +33,7 @@ export enum Kingdom {
   MONERA = 'MONERA'
 }
 
+/** Terrestrial or marine species category used in the catalog. */
 export enum SpeciesCategory {
   FLORA_TERRESTRE = 'FLORA_TERRESTRE',
   FAUNE_TERRESTRE = 'FAUNE_TERRESTRE',
@@ -32,17 +41,30 @@ export enum SpeciesCategory {
   EAU_DOUCE = 'EAU_DOUCE'
 }
 
+/**
+ * IUCN Red List conservation status codes.
+ * @enum {string}
+ */
 export enum IUCNStatus {
-  LC = 'LC', // Least Concern
-  NT = 'NT', // Near Threatened
-  VU = 'VU', // Vulnerable
-  EN = 'EN', // Endangered
-  CR = 'CR', // Critically Endangered
-  EW = 'EW', // Extinct in the Wild
-  EX = 'EX', // Extinct
-  DD = 'DD' // Data Deficient
+  /** Least Concern */
+  LC = 'LC',
+  /** Near Threatened */
+  NT = 'NT',
+  /** Vulnerable */
+  VU = 'VU',
+  /** Endangered */
+  EN = 'EN',
+  /** Critically Endangered */
+  CR = 'CR',
+  /** Extinct in the Wild */
+  EW = 'EW',
+  /** Extinct */
+  EX = 'EX',
+  /** Data Deficient */
+  DD = 'DD'
 }
 
+/** Geographic distribution of a species. */
 export interface GeographicRange {
   regions: string[];
   coordinates?: Coordinates[];
@@ -52,16 +74,19 @@ export interface GeographicRange {
   };
 }
 
+/** WGS84 geographic point. */
 export interface Coordinates {
   latitude: number;
   longitude: number;
 }
 
+/** Field observation record for a species. */
 export interface Observation {
   id: string;
   speciesId: string;
   date: Date;
   location: Coordinates;
+  /** User ID of the observer. */
   observerId: string;
   quantity?: number;
   condition?: string;
@@ -70,6 +95,7 @@ export interface Observation {
   environmentalConditions?: EnvironmentalConditions;
 }
 
+/** Environmental readings captured during an observation. */
 export interface EnvironmentalConditions {
   temperature?: number;
   humidity?: number;
@@ -78,6 +104,7 @@ export interface EnvironmentalConditions {
   waterQuality?: WaterQuality;
 }
 
+/** In-situ water quality measurements. */
 export interface WaterQuality {
   pH?: number;
   dissolvedOxygen?: number;
@@ -85,6 +112,7 @@ export interface WaterQuality {
   salinity?: number;
 }
 
+/** Bibliographic reference linked to a species entry. */
 export interface ScientificReference {
   id: string;
   title: string;

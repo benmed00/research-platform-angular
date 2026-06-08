@@ -12,7 +12,7 @@ Listens on `http://localhost:3000`.
 
 ## Integration with Angular
 
-With `pnpm start`, the dev server proxies `/api` → `localhost:3000` (see `proxy.conf.json`).
+With `pnpm start` (or `pnpm run serve` alongside `pnpm run mock-api`), the dev server proxies `/api` → `localhost:3000` (see `proxy.conf.json`).
 
 ```
 POST http://localhost:4200/api/auth/login

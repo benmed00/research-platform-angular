@@ -6,9 +6,13 @@
   >
   </app-page-header>
 
-  <mat-card>
-    <mat-card-content>
-      <p>Module équipements en développement</p>
-    </mat-card-content>
-  </mat-card>
+  <app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+  <app-data-table
+    *ngIf="!loading"
+    [columns]="columnLabels"
+    [data]="equipment"
+    [displayedColumns]="displayedColumns"
+  >
+  </app-data-table>
 </div>

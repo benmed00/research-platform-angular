@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { ApiService } from '../../../core/services/api.service';
 import { AuthService } from '../../../core/services/auth.service';
 import { User, UserRole } from '../../../models/user.model';
 
@@ -11,6 +12,9 @@ export interface DashboardStat {
   trend: { value: number; isPositive: boolean };
 }
 
+/**
+ * Role-aware dashboard displaying summary statistics for the logged-in user.
+ */
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -19,48 +23,53 @@ export interface DashboardStat {
 export class DashboardComponent implements OnInit {
   currentUser: User | null = null;
   stats: DashboardStat[] = [];
+  loading = false;
 
-  constructor(private authService: AuthService) {}
+  /**
+   * Injects auth and API services for dashboard data.
+   *
+   * @param authService - Provides the current user for personalized titles
+   * @param apiService - Loads dashboard statistics from the API
+   */
+  constructor(
+    private authService: AuthService,
+    private apiService: ApiService
+  ) {}
 
+  /**
+   * Initializes the dashboard with the current user and loads stats.
+   *
+   * @returns Nothing.
+   */
   ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
     this.loadDashboardData();
   }
 
+  /**
+   * Fetches dashboard statistics from `/dashboard/stats`.
+   *
+   * @returns Nothing.
+   */
   loadDashboardData(): void {
-    // Mock data - replace with actual API calls
-    this.stats = [
-      {
-        title: 'Espèces cataloguées',
-        value: '1,234',
-        icon: 'eco',
-        color: '#27ae60',
-        trend: { value: 12, isPositive: true }
+    this.loading = true;
+    this.apiService.get<DashboardStat[]>('/dashboard/stats').subscribe({
+      next: (stats) => {
+        this.stats = stats;
+        this.loading = false;
       },
-      {
-        title: 'Missions actives',
-        value: '8',
-        icon: 'explore',
-        color: '#3498db',
-        trend: { value: 3, isPositive: true }
-      },
-      {
-        title: 'Budget consommé',
-        value: '65%',
-        icon: 'account_balance',
-        color: '#e67e22',
-        trend: { value: 5, isPositive: false }
-      },
-      {
-        title: 'Équipements actifs',
-        value: '42',
-        icon: 'precision_manufacturing',
-        color: '#9b59b6',
-        trend: { value: 2, isPositive: true }
+      error: () => {
+        this.stats = [];
+        this.loading = false;
       }
-    ];
+    });
   }
 
+  /**
+   * Returns a role-specific dashboard title for the current user.
+   *
+   * @returns Localized dashboard heading
+   */
   getDashboardTitle(): string {
     if (!this.currentUser) return 'Tableau de bord';
 
