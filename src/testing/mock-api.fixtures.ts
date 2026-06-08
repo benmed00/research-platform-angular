@@ -209,3 +209,89 @@ export function createMockEmployees() {
     }
   ];
 }
+
+/**
+ * Returns sample budget records for integration tests.
+ *
+ * @returns Mock budget list items.
+ */
+export function createMockBudgets() {
+  return [
+    {
+      id: 'b-1',
+      year: 2024,
+      category: 'FIELD_MISSIONS',
+      allocatedAmount: 250000,
+      spentAmount: 162500,
+      remainingAmount: 87500
+    },
+    {
+      id: 'b-2',
+      year: 2024,
+      category: 'LABORATORY',
+      allocatedAmount: 180000,
+      spentAmount: 94500,
+      remainingAmount: 85500
+    }
+  ];
+}
+
+/**
+ * Returns sample publication records for integration tests.
+ *
+ * @returns Mock publication list items.
+ */
+export function createMockPublications() {
+  return [
+    {
+      id: 'pub-1',
+      title: 'Atlas de la Biodiversité 2024',
+      type: 'ANNUAL_BOOK',
+      status: 'IN_REVIEW',
+      year: 2024
+    },
+    {
+      id: 'pub-2',
+      title: 'Bulletin trimestriel - Q1',
+      type: 'NEWSLETTER',
+      status: 'PUBLISHED',
+      year: 2024
+    }
+  ];
+}
+
+/**
+ * Returns sample environmental reading records for integration tests.
+ *
+ * @returns Mock environmental reading list items.
+ */
+export function createMockEnvironmentalReadings() {
+  return [
+    {
+      id: 'env-1',
+      type: 'WATER_QUALITY',
+      location: 'Station Oued Sebou',
+      timestamp: '2024-06-15T08:30:00.000Z',
+      quality: 'GOOD'
+    },
+    {
+      id: 'env-2',
+      type: 'AIR_QUALITY',
+      location: 'Station Rabat Centre',
+      timestamp: '2024-06-15T09:00:00.000Z',
+      quality: 'MODERATE'
+    }
+  ];
+}
+
+/**
+ * Returns sample GIS map layer records for integration tests.
+ *
+ * @returns Mock map layer list items.
+ */
+export function createMockMapLayers() {
+  return [
+    { id: 'layer-1', name: 'Habitats forestiers', type: 'HABITAT', visible: true, opacity: 0.8 },
+    { id: 'layer-2', name: 'Stations météo', type: 'WEATHER_STATION', visible: true, opacity: 1 }
+  ];
+}

@@ -6,9 +6,13 @@
   >
   </app-page-header>
 
-  <mat-card>
-    <mat-card-content>
-      <p>Module publication en développement</p>
-    </mat-card-content>
-  </mat-card>
+  <app-loading-spinner *ngIf="loading"></app-loading-spinner>
+
+  <app-data-table
+    *ngIf="!loading"
+    [columns]="columnLabels"
+    [data]="publications"
+    [displayedColumns]="displayedColumns"
+  >
+  </app-data-table>
 </div>

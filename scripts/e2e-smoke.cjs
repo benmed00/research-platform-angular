@@ -37,7 +37,11 @@ async function run() {
       '/api/species',
       '/api/equipment',
       '/api/documents',
-      '/api/employees'
+      '/api/employees',
+      '/api/accounting/budgets',
+      '/api/publishing/publications',
+      '/api/environmental-data/readings',
+      '/api/gis/layers'
     ];
 
     for (const route of protectedRoutes) {

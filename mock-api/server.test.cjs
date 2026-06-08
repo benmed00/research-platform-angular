@@ -134,6 +134,29 @@ describe('mock-api server', () => {
     assert.equal(documents.length, 2);
     assert.equal(employees.length, 2);
   });
+
+  it('serves accounting, publishing, environmental-data, and gis resources', async () => {
+    const token = await loginToken(baseUrl, 'scientifique@research.local');
+    const headers = { Authorization: `Bearer ${token}` };
+
+    const budgets = await (await fetch(`${baseUrl}/api/accounting/budgets`, { headers })).json();
+    const publications = await (
+      await fetch(`${baseUrl}/api/publishing/publications`, { headers })
+    ).json();
+    const readings = await (
+      await fetch(`${baseUrl}/api/environmental-data/readings`, { headers })
+    ).json();
+    const layers = await (await fetch(`${baseUrl}/api/gis/layers`, { headers })).json();
+
+    assert.equal(budgets.length, 2);
+    assert.equal(budgets[0].category, 'FIELD_MISSIONS');
+    assert.equal(publications.length, 2);
+    assert.equal(publications[0].status, 'IN_REVIEW');
+    assert.equal(readings.length, 2);
+    assert.equal(readings[0].type, 'WATER_QUALITY');
+    assert.equal(layers.length, 2);
+    assert.equal(layers[0].type, 'HABITAT');
+  });
 });
 
 async function loginToken(baseUrl, email) {

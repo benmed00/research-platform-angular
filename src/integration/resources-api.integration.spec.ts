@@ -6,11 +6,15 @@ import { ApiService } from '../app/core/services/api.service';
 import { AuthService } from '../app/core/services/auth.service';
 import {
   createMockApiLoginResponse,
+  createMockBudgets,
   createMockDashboardStats,
   createMockDocuments,
   createMockEmployees,
+  createMockEnvironmentalReadings,
   createMockEquipment,
+  createMockMapLayers,
   createMockMissions,
+  createMockPublications,
   createMockSpecies
 } from '../testing/mock-api.fixtures';
 
@@ -52,7 +56,11 @@ describe('Integration: Protected resource APIs', () => {
       { url: '/api/species', data: createMockSpecies() },
       { url: '/api/equipment', data: createMockEquipment() },
       { url: '/api/documents', data: createMockDocuments() },
-      { url: '/api/employees', data: createMockEmployees() }
+      { url: '/api/employees', data: createMockEmployees() },
+      { url: '/api/accounting/budgets', data: createMockBudgets() },
+      { url: '/api/publishing/publications', data: createMockPublications() },
+      { url: '/api/environmental-data/readings', data: createMockEnvironmentalReadings() },
+      { url: '/api/gis/layers', data: createMockMapLayers() }
     ];
 
     routes.forEach(({ url, data }) => {
