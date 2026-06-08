@@ -15,6 +15,9 @@ jobs:
     name: Format, Lint, Build, Test
     runs-on: ubuntu-latest
     timeout-minutes: 20
+    env:
+      HUSKY: 0
+      CI: true
 
     steps:
       - name: Checkout repository
@@ -53,8 +56,6 @@ jobs:
 
       - name: Run unit and integration tests
         run: pnpm run test:ci
-        env:
-          CI: true
 
       - name: Upload coverage report
         uses: actions/upload-artifact@v4
