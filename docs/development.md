@@ -42,25 +42,33 @@ pnpm start
 - App: `http://localhost:4200`
 - API requests to `/api/*` are proxied to the mock server via `proxy.conf.json`
 
-### 3. Run tests before committing
+### 3. Run quality gates before committing
+
+Pre-commit hooks run automatically (format, lint, build, test). To verify manually:
 
 ```bash
-pnpm run test:ci
-pnpm run build
+pnpm run validate
 ```
+
+See [Contributing](./contributing.md) for commit message conventions.
 
 ## pnpm scripts
 
-| Script                   | Purpose                          |
-| ------------------------ | -------------------------------- |
-| `pnpm start`             | Dev server with hot reload       |
-| `pnpm run mock-api`      | Local mock REST API              |
-| `pnpm run build`         | Production build                 |
-| `pnpm run watch`         | Dev build in watch mode          |
-| `pnpm test`              | Unit tests (watch + Chrome)      |
-| `pnpm run test:watch`    | Alias for `pnpm test`            |
-| `pnpm run test:ci`       | Headless tests for CI            |
-| `pnpm run test:coverage` | Headless tests + coverage report |
+| Script                   | Purpose                                 |
+| ------------------------ | --------------------------------------- |
+| `pnpm start`             | Dev server with hot reload              |
+| `pnpm run mock-api`      | Local mock REST API                     |
+| `pnpm run build`         | Production build                        |
+| `pnpm run watch`         | Dev build in watch mode                 |
+| `pnpm test`              | Unit tests (watch + Chrome)             |
+| `pnpm run test:watch`    | Alias for `pnpm test`                   |
+| `pnpm run test:ci`       | Headless tests for CI                   |
+| `pnpm run test:coverage` | Headless tests + coverage report        |
+| `pnpm run lint`          | ESLint (TypeScript + templates)         |
+| `pnpm run lint:fix`      | ESLint with auto-fix                    |
+| `pnpm run format`        | Prettier write                          |
+| `pnpm run format:check`  | Prettier check (CI and pre-commit)      |
+| `pnpm run validate`      | Full gate: format, lint, build, test:ci |
 
 ## Project layout
 
