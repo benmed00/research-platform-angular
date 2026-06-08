@@ -42,6 +42,15 @@ describe('DataTableComponent', () => {
     expect(component.getColumnLabel('unknown')).toBe('unknown');
   });
 
+  it('should format cell values with optional formatters', () => {
+    component.valueFormatters = {
+      email: (row) => `formatted-${(row as { email: string }).email}`
+    };
+    const row = { firstName: 'Alice', lastName: 'Martin', email: 'alice@example.com' };
+    expect(component.getCellValue(row, 'email')).toBe('formatted-alice@example.com');
+    expect(component.getCellValue(row, 'firstName')).toBe('Alice');
+  });
+
   it('should bind data to the table data source', () => {
     expect(component.dataSource.data).toEqual(component.data);
   });

@@ -8,7 +8,7 @@
     </div>
 
     <mat-nav-list>
-      @for (item of getVisibleMenuItems(); track item) {
+      @for (item of visibleMenuItems; track item.route) {
         <a mat-list-item [routerLink]="item.route" routerLinkActive="active">
           <mat-icon matListItemIcon>{{ item.icon }}</mat-icon>
           @if (isOpen) {

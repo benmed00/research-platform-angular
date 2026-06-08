@@ -109,13 +109,45 @@ const employees = [
   }
 ];
 
+const accountingSummary = {
+  budgetTotal: '2 400 000 MAD',
+  budgetConsumed: '1 560 000 MAD',
+  pendingInvoices: 14,
+  approvedGrants: 6
+};
+
+const environmentalSummary = {
+  waterQualitySites: 18,
+  airMonitoringStations: 7,
+  climateRecords: 1240,
+  geologySamples: 326
+};
+
+const gisSummary = {
+  activeLayers: 12,
+  mappedSites: 48,
+  satelliteImages: 156,
+  fieldTracks: 89
+};
+
+const publishingSummary = {
+  manuscriptsInReview: 5,
+  publishedThisYear: 11,
+  pendingApprovals: 3,
+  openAccessTitles: 8
+};
+
 const resourceRoutes = {
   '/api/dashboard/stats': dashboardStats,
   '/api/missions': missions,
   '/api/species': species,
   '/api/equipment': equipment,
   '/api/documents': documents,
-  '/api/employees': employees
+  '/api/employees': employees,
+  '/api/accounting/summary': accountingSummary,
+  '/api/environmental-data/summary': environmentalSummary,
+  '/api/gis/summary': gisSummary,
+  '/api/publishing/summary': publishingSummary
 };
 
 module.exports = {
@@ -125,5 +157,9 @@ module.exports = {
   equipment,
   documents,
   employees,
+  accountingSummary,
+  environmentalSummary,
+  gisSummary,
+  publishingSummary,
   resourceRoutes
 };

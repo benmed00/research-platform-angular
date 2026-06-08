@@ -31,15 +31,17 @@ describe('SidebarComponent', () => {
 
   it('should return no menu items when user is missing', () => {
     vi.mocked(authService.getCurrentUser).mockReturnValue(null);
-    expect(component.getVisibleMenuItems()).toEqual([]);
+    component.ngOnInit();
+    expect(component.visibleMenuItems).toEqual([]);
   });
 
   it('should filter menu items by user role', () => {
     vi.mocked(authService.getCurrentUser).mockReturnValue(
       createMockUser({ role: UserRole.BOTANISTE })
     );
+    component.ngOnInit();
 
-    const routes = component.getVisibleMenuItems().map((item) => item.route);
+    const routes = component.visibleMenuItems.map((item) => item.route);
     expect(routes).toContain('/dashboard');
     expect(routes).not.toContain('/users');
     expect(routes).not.toContain('/accounting');

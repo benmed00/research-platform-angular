@@ -47,7 +47,7 @@ describe('Integration: Auth stack (login → token → API)', () => {
   it('should complete login and attach bearer token to subsequent API calls', () => {
     const loginFixture = TestBed.createComponent(LoginComponent);
     const loginComponent = loginFixture.componentInstance;
-    vi.spyOn(router, 'navigate').mockResolvedValue(true);
+    vi.spyOn(router, 'navigateByUrl').mockResolvedValue(true);
 
     const credentials = {
       email: mockApiAccounts[1].email,
@@ -59,7 +59,7 @@ describe('Integration: Auth stack (login → token → API)', () => {
     loginComponent.onSubmit();
 
     httpMock.expectOne('/api/auth/login').flush(loginResponse);
-    expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/dashboard');
     expect(authService.getToken()).toBe('integration-token');
 
     http.get<User[]>('/api/users').subscribe((users) => {

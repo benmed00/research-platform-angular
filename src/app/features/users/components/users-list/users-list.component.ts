@@ -5,7 +5,10 @@ import {
   ChangeDetectionStrategy,
   inject
 } from '@angular/core';
+import { Router } from '@angular/router';
 import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
+import { DataTableValueFormatter } from '../../../../shared/components/data-table/data-table.component';
+import { formatActiveStatus, formatUserRole } from '../../../../shared/display-formatters';
 import { ApiService } from '../../../../core/services/api.service';
 import { User } from '../../../../models/user.model';
 
@@ -21,6 +24,8 @@ import { User } from '../../../../models/user.model';
   imports: [SHARED_IMPORTS]
 })
 export class UsersListComponent implements OnInit {
+  private readonly apiService = inject(ApiService);
+  private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
 
   users: User[] = [];
@@ -33,13 +38,10 @@ export class UsersListComponent implements OnInit {
     role: 'Rôle',
     status: 'Statut'
   };
-
-  /**
-   * Injects the API service for loading user records.
-   *
-   * @param apiService - Loads user records from the API
-   */
-  constructor(private apiService: ApiService) {}
+  valueFormatters: Record<string, DataTableValueFormatter> = {
+    role: (row) => formatUserRole((row as User).role),
+    status: (row) => formatActiveStatus((row as User).isActive)
+  };
 
   /**
    * Loads users on component init.
@@ -73,32 +75,53 @@ export class UsersListComponent implements OnInit {
   }
 
   /**
-   * Handles edit action for a user row (not yet implemented).
+   * Navigates to the create-user form.
    *
-   * @param _user - Selected user row
    * @returns Nothing.
    */
-  onEdit(_user: object): void {
-    // Navigate to edit form
+  createUser(): void {
+    void this.router.navigate(['/users/new']);
   }
 
   /**
-   * Handles delete action for a user row (not yet implemented).
+   * Navigates to the edit form for the selected user.
    *
-   * @param _user - Selected user row
+   * @param user - Selected user row
    * @returns Nothing.
    */
-  onDelete(_user: object): void {
-    // Show confirmation dialog and delete
+  onEdit(user: object): void {
+    const selected = user as User;
+    void this.router.navigate(['/users', selected.id, 'edit']);
   }
 
   /**
-   * Handles view action for a user row (not yet implemented).
+   * Deletes the selected user after confirmation.
    *
-   * @param _user - Selected user row
+   * @param user - Selected user row
    * @returns Nothing.
    */
-  onView(_user: object): void {
-    // Navigate to user details
+  onDelete(user: object): void {
+    const selected = user as User;
+    if (!confirm(`Supprimer l'utilisateur ${selected.firstName} ${selected.lastName} ?`)) {
+      return;
+    }
+
+    this.apiService.delete(`/users/${selected.id}`).subscribe({
+      next: () => this.loadUsers(),
+      error: () => {
+        alert('Impossible de supprimer cet utilisateur.');
+        this.cdr.markForCheck();
+      }
+    });
+  }
+
+  /**
+   * Opens the edit form for read-only inspection.
+   *
+   * @param user - Selected user row
+   * @returns Nothing.
+   */
+  onView(user: object): void {
+    this.onEdit(user);
   }
 }

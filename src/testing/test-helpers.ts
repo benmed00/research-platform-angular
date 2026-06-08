@@ -5,7 +5,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Permission, User, UserRole } from '../app/models/user.model';
 import { provideHttpClient, withInterceptors, withXhr } from '@angular/common/http';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../app/core/services/auth.service';
 import { authInterceptor } from '../app/core/interceptors/auth.interceptor';
 import { Observable, of } from 'rxjs';
@@ -46,8 +46,33 @@ export function spyAuthService(partial: Partial<SpyAuthService> = {}): AuthServi
 export function spyRouter(): Router {
   return {
     navigate: vi.fn().mockResolvedValue(true),
-    createUrlTree: vi.fn((commands: unknown[], extras?: unknown) => ({ commands, extras }))
+    navigateByUrl: vi.fn().mockResolvedValue(true),
+    createUrlTree: vi.fn((commands: unknown[], extras?: unknown) => ({ commands, extras })),
+    parseUrl: vi.fn((url: string) => ({ url }))
   } as unknown as Router;
+}
+
+/**
+ * Creates a minimal {@link ActivatedRoute} stub for guard and login tests.
+ *
+ * @param returnUrl - Optional `returnUrl` query parameter value
+ * @param id - Optional route `id` parameter value
+ * @returns ActivatedRoute-shaped stub for TestBed providers
+ */
+export function spyActivatedRoute(
+  returnUrl: string | null = null,
+  id: string | null = null
+): ActivatedRoute {
+  return {
+    snapshot: {
+      queryParamMap: {
+        get: (key: string) => (key === 'returnUrl' ? returnUrl : null)
+      },
+      paramMap: {
+        get: (key: string) => (key === 'id' ? id : null)
+      }
+    }
+  } as unknown as ActivatedRoute;
 }
 
 /**

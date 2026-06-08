@@ -1,4 +1,4 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import { Component, ChangeDetectionStrategy, signal } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from '../header/header.component';
 import { SidebarComponent } from '../sidebar/sidebar.component';
@@ -15,7 +15,7 @@ import { SidebarComponent } from '../sidebar/sidebar.component';
   imports: [RouterOutlet, HeaderComponent, SidebarComponent]
 })
 export class MainLayoutComponent {
-  sidebarOpen = true;
+  readonly sidebarOpen = signal(true);
 
   /**
    * Toggles sidebar visibility.
@@ -23,6 +23,6 @@ export class MainLayoutComponent {
    * @returns Nothing.
    */
   toggleSidebar(): void {
-    this.sidebarOpen = !this.sidebarOpen;
+    this.sidebarOpen.update((open) => !open);
   }
 }

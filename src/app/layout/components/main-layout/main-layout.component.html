@@ -2,9 +2,9 @@
   <app-header (toggleSidebar)="toggleSidebar()"></app-header>
 
   <div class="layout-content">
-    <app-sidebar [isOpen]="sidebarOpen"></app-sidebar>
+    <app-sidebar [isOpen]="sidebarOpen()"></app-sidebar>
 
-    <main class="main-content" [class.sidebar-closed]="!sidebarOpen">
+    <main class="main-content" [class.sidebar-closed]="!sidebarOpen()">
       <router-outlet></router-outlet>
     </main>
   </div>

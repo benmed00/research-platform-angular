@@ -6,6 +6,8 @@ import {
   inject
 } from '@angular/core';
 import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
+import { DataTableValueFormatter } from '../../../../shared/components/data-table/data-table.component';
+import { formatEquipmentStatus } from '../../../../shared/display-formatters';
 import { ApiService } from '../../../../core/services/api.service';
 
 export interface EquipmentListItem {
@@ -37,13 +39,11 @@ export class EquipmentListComponent implements OnInit {
     category: 'Catégorie',
     status: 'Statut'
   };
+  valueFormatters: Record<string, DataTableValueFormatter> = {
+    status: (row) => formatEquipmentStatus((row as EquipmentListItem).status)
+  };
 
-  /**
-   * Injects the API service for loading equipment records.
-   *
-   * @param apiService - Loads equipment records from the API
-   */
-  constructor(private apiService: ApiService) {}
+  private readonly apiService = inject(ApiService);
 
   /**
    * Loads equipment on component init.

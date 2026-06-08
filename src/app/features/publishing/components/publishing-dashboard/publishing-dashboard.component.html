@@ -6,9 +6,46 @@
   >
   </app-page-header>
 
-  <mat-card>
-    <mat-card-content>
-      <p>Module publication en développement</p>
-    </mat-card-content>
-  </mat-card>
+  @if (loading) {
+    <app-loading-spinner></app-loading-spinner>
+  }
+
+  @if (!loading && !summary) {
+    <mat-card>
+      <mat-card-content>
+        <p>
+          Impossible de charger les données de publication. Vérifiez que le mock API est démarré.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (!loading && summary) {
+    <div class="stats-grid">
+      <app-stat-card
+        title="Manuscrits en revue"
+        [value]="summary.manuscriptsInReview.toString()"
+        icon="rate_review"
+        color="#9b59b6"
+      ></app-stat-card>
+      <app-stat-card
+        title="Publiés cette année"
+        [value]="summary.publishedThisYear.toString()"
+        icon="auto_stories"
+        color="#27ae60"
+      ></app-stat-card>
+      <app-stat-card
+        title="Approbations en attente"
+        [value]="summary.pendingApprovals.toString()"
+        icon="pending_actions"
+        color="#e67e22"
+      ></app-stat-card>
+      <app-stat-card
+        title="Titres open access"
+        [value]="summary.openAccessTitles.toString()"
+        icon="public"
+        color="#2980b9"
+      ></app-stat-card>
+    </div>
+  }
 </div>

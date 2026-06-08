@@ -1,11 +1,22 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject
+} from '@angular/core';
 import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
+import { ApiService } from '../../../../core/services/api.service';
+
+interface EnvironmentalSummary {
+  waterQualitySites: number;
+  airMonitoringStations: number;
+  climateRecords: number;
+  geologySamples: number;
+}
 
 /**
- * Environmental monitoring data explorer and time-series viewer.
- *
- * @remarks Implementation pending — placeholder for the environmental-data feature module.
- * @see environmental-data.model — EnvironmentalData
+ * Environmental monitoring overview with dataset counts.
  */
 @Component({
   selector: 'app-environmental-data',
@@ -15,4 +26,33 @@ import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
   standalone: true,
   imports: [SHARED_IMPORTS]
 })
-export class EnvironmentalDataComponent {}
+export class EnvironmentalDataComponent implements OnInit {
+  private readonly apiService = inject(ApiService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  loading = false;
+  summary: EnvironmentalSummary | null = null;
+
+  /**
+   * Loads environmental summary data on init.
+   *
+   * @returns Nothing.
+   */
+  ngOnInit(): void {
+    this.loading = true;
+    this.cdr.markForCheck();
+
+    this.apiService.get<EnvironmentalSummary>('/environmental-data/summary').subscribe({
+      next: (summary) => {
+        this.summary = summary;
+        this.loading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.summary = null;
+        this.loading = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+}

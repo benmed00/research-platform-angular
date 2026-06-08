@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
 import { AuthService } from '../../../core/services/auth.service';
 import { LoginComponent } from './login.component';
@@ -7,6 +7,7 @@ import {
   configureStandaloneComponentTest,
   createJwt,
   createMockUser,
+  spyActivatedRoute,
   spyAuthService,
   spyRouter
 } from '../../../../testing/test-helpers';
@@ -23,7 +24,8 @@ describe('LoginComponent', () => {
 
     await configureStandaloneComponentTest(LoginComponent, [
       { provide: AuthService, useValue: authService },
-      { provide: Router, useValue: router }
+      { provide: Router, useValue: router },
+      { provide: ActivatedRoute, useValue: spyActivatedRoute() }
     ]);
 
     fixture = TestBed.createComponent(LoginComponent);
@@ -53,7 +55,7 @@ describe('LoginComponent', () => {
     component.onSubmit();
 
     expect(authService.login).toHaveBeenCalled();
-    expect(router.navigate).toHaveBeenCalledWith(['/dashboard']);
+    expect(router.navigateByUrl).toHaveBeenCalledWith('/dashboard');
   });
 
   it('should show an error message on failed login', () => {

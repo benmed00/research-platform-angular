@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
-import { configureStandaloneComponentTest } from '../../../../../testing/test-helpers';
+import { Router } from '@angular/router';
+import { configureStandaloneComponentTest, spyRouter } from '../../../../../testing/test-helpers';
 import { createMockApiUsers } from '../../../../../testing/mock-api.fixtures';
 import { UsersListComponent } from './users-list.component';
 
@@ -8,9 +9,13 @@ describe('UsersListComponent', () => {
   let component: UsersListComponent;
   let fixture: ComponentFixture<UsersListComponent>;
   let httpMock: HttpTestingController;
+  let router: Router;
 
   beforeEach(async () => {
-    await configureStandaloneComponentTest(UsersListComponent);
+    router = spyRouter();
+    await configureStandaloneComponentTest(UsersListComponent, [
+      { provide: Router, useValue: router }
+    ]);
     httpMock = TestBed.inject(HttpTestingController);
     fixture = TestBed.createComponent(UsersListComponent);
     component = fixture.componentInstance;
@@ -58,11 +63,28 @@ describe('UsersListComponent', () => {
     expect(component.columnLabels['email']).toBe('Email');
   });
 
-  it('should handle table action callbacks', () => {
+  it('should navigate to create and edit routes', () => {
     httpMock.expectOne('/api/users').flush([]);
-    const user = { id: '1' };
-    expect(() => component.onEdit(user)).not.toThrow();
-    expect(() => component.onDelete(user)).not.toThrow();
-    expect(() => component.onView(user)).not.toThrow();
+    component.createUser();
+    expect(router.navigate).toHaveBeenCalledWith(['/users/new']);
+
+    component.onEdit({ id: '42' });
+    expect(router.navigate).toHaveBeenCalledWith(['/users', '42', 'edit']);
+  });
+
+  it('should delete a user after confirmation', () => {
+    httpMock.expectOne('/api/users').flush([{ id: '42' }]);
+    vi.stubGlobal(
+      'confirm',
+      vi.fn(() => true)
+    );
+
+    component.onDelete({ id: '42' });
+    const deleteRequest = httpMock.expectOne('/api/users/42');
+    expect(deleteRequest.request.method).toBe('DELETE');
+    deleteRequest.flush({ success: true });
+    httpMock.expectOne('/api/users').flush([]);
+
+    vi.unstubAllGlobals();
   });
 });

@@ -11,7 +11,7 @@
     @for (column of displayedColumns; track column) {
       <ng-container [matColumnDef]="column">
         <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ getColumnLabel(column) }}</th>
-        <td mat-cell *matCellDef="let row">{{ row[column] }}</td>
+        <td mat-cell *matCellDef="let row">{{ getCellValue(row, column) }}</td>
       </ng-container>
     }
 

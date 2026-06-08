@@ -6,9 +6,50 @@
   >
   </app-page-header>
 
-  <mat-card>
-    <mat-card-content>
-      <p>Module SIG en développement</p>
-    </mat-card-content>
-  </mat-card>
+  @if (loading) {
+    <app-loading-spinner></app-loading-spinner>
+  }
+
+  @if (!loading && !summary) {
+    <mat-card>
+      <mat-card-content>
+        <p>Impossible de charger les données SIG. Vérifiez que le mock API est démarré.</p>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (!loading && summary) {
+    <div class="stats-grid">
+      <app-stat-card
+        title="Couches actives"
+        [value]="summary.activeLayers.toString()"
+        icon="layers"
+        color="#3498db"
+      ></app-stat-card>
+      <app-stat-card
+        title="Sites cartographiés"
+        [value]="summary.mappedSites.toString()"
+        icon="place"
+        color="#16a085"
+      ></app-stat-card>
+      <app-stat-card
+        title="Images satellite"
+        [value]="summary.satelliteImages.toString()"
+        icon="satellite_alt"
+        color="#8e44ad"
+      ></app-stat-card>
+      <app-stat-card
+        title="Traces terrain"
+        [value]="summary.fieldTracks.toString()"
+        icon="route"
+        color="#d35400"
+      ></app-stat-card>
+    </div>
+
+    <mat-card>
+      <mat-card-content>
+        <p>La carte interactive sera intégrée dans une prochaine itération.</p>
+      </mat-card-content>
+    </mat-card>
+  }
 </div>

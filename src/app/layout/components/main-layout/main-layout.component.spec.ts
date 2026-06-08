@@ -19,8 +19,8 @@ describe('MainLayoutComponent', () => {
   });
 
   it('should toggle sidebar visibility', () => {
-    expect(component.sidebarOpen).toBe(true);
+    expect(component.sidebarOpen()).toBe(true);
     component.toggleSidebar();
-    expect(component.sidebarOpen).toBe(false);
+    expect(component.sidebarOpen()).toBe(false);
   });
 });

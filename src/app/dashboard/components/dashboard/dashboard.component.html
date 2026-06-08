@@ -6,36 +6,42 @@
   >
   </app-page-header>
 
-  <div class="stats-grid">
-    @for (stat of stats; track stat) {
-      <app-stat-card
-        [title]="stat.title"
-        [value]="stat.value"
-        [icon]="stat.icon"
-        [color]="stat.color"
-        [trend]="stat.trend"
-      >
-      </app-stat-card>
-    }
-  </div>
+  @if (loading) {
+    <app-loading-spinner></app-loading-spinner>
+  }
 
-  <div class="dashboard-content">
-    <mat-card class="dashboard-card">
-      <mat-card-header>
-        <mat-card-title>Activités récentes</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p>Les activités récentes seront affichées ici.</p>
-      </mat-card-content>
-    </mat-card>
+  @if (!loading) {
+    <div class="stats-grid">
+      @for (stat of stats; track stat.title) {
+        <app-stat-card
+          [title]="stat.title"
+          [value]="stat.value"
+          [icon]="stat.icon"
+          [color]="stat.color"
+          [trend]="stat.trend"
+        >
+        </app-stat-card>
+      }
+    </div>
 
-    <mat-card class="dashboard-card">
-      <mat-card-header>
-        <mat-card-title>Missions en cours</mat-card-title>
-      </mat-card-header>
-      <mat-card-content>
-        <p>Les missions en cours seront affichées ici.</p>
-      </mat-card-content>
-    </mat-card>
-  </div>
+    <div class="dashboard-content">
+      <mat-card class="dashboard-card">
+        <mat-card-header>
+          <mat-card-title>Activités récentes</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Les activités récentes seront affichées ici.</p>
+        </mat-card-content>
+      </mat-card>
+
+      <mat-card class="dashboard-card">
+        <mat-card-header>
+          <mat-card-title>Missions en cours</mat-card-title>
+        </mat-card-header>
+        <mat-card-content>
+          <p>Les missions en cours seront affichées ici.</p>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  }
 </div>
