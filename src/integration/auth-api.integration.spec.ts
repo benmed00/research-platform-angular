@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpTestingController, provideHttpClientTesting } from '@angular/common/http/testing';
 import { AuthService } from '../app/core/services/auth.service';
 import { createMockApiLoginResponse, mockApiAccounts } from '../testing/mock-api.fixtures';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
 
 describe('Integration: Auth API contract', () => {
   let authService: AuthService;
@@ -13,7 +13,7 @@ describe('Integration: Auth API contract', () => {
       imports: [],
       providers: [
         AuthService,
-        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClient(withXhr(), withInterceptorsFromDi()),
         provideHttpClientTesting()
       ]
     });

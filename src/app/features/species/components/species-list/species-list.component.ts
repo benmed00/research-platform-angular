@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ApiService } from '../../../../core/services/api.service';
 
 export interface SpeciesListItem {
@@ -14,7 +14,9 @@ export interface SpeciesListItem {
 @Component({
   selector: 'app-species-list',
   templateUrl: './species-list.component.html',
-  styleUrls: ['./species-list.component.scss']
+  styleUrls: ['./species-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class SpeciesListComponent implements OnInit {
   species: SpeciesListItem[] = [];

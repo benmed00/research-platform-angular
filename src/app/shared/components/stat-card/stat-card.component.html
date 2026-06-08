@@ -1,13 +1,17 @@
 <div class="stat-card" [style.border-left-color]="color">
   <div class="stat-header">
     <span class="stat-label">{{ title }}</span>
-    <mat-icon *ngIf="icon" class="stat-icon" [style.color]="color">{{ icon }}</mat-icon>
+    @if (icon) {
+      <mat-icon class="stat-icon" [style.color]="color">{{ icon }}</mat-icon>
+    }
   </div>
   <div class="stat-value">{{ value }}</div>
-  <div class="stat-trend" *ngIf="trend">
-    <mat-icon [class]="trend.isPositive ? 'trend-up' : 'trend-down'">
-      {{ trend.isPositive ? 'trending_up' : 'trending_down' }}
-    </mat-icon>
-    <span>{{ trend.value }}%</span>
-  </div>
+  @if (trend) {
+    <div class="stat-trend">
+      <mat-icon [class]="trend.isPositive ? 'trend-up' : 'trend-down'">
+        {{ trend.isPositive ? 'trending_up' : 'trending_down' }}
+      </mat-icon>
+      <span>{{ trend.value }}%</span>
+    </div>
+  }
 </div>

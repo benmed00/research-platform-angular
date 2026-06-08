@@ -7,15 +7,16 @@
   </app-page-header>
 
   <div class="stats-grid">
-    <app-stat-card
-      *ngFor="let stat of stats"
-      [title]="stat.title"
-      [value]="stat.value"
-      [icon]="stat.icon"
-      [color]="stat.color"
-      [trend]="stat.trend"
-    >
-    </app-stat-card>
+    @for (stat of stats; track stat) {
+      <app-stat-card
+        [title]="stat.title"
+        [value]="stat.value"
+        [icon]="stat.icon"
+        [color]="stat.color"
+        [trend]="stat.trend"
+      >
+      </app-stat-card>
+    }
   </div>
 
   <div class="dashboard-content">

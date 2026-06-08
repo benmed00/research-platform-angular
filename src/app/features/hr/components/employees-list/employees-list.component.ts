@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ApiService } from '../../../../core/services/api.service';
 
 export interface EmployeeListItem {
@@ -16,7 +16,9 @@ export interface EmployeeListItem {
 @Component({
   selector: 'app-employees-list',
   templateUrl: './employees-list.component.html',
-  styleUrls: ['./employees-list.component.scss']
+  styleUrls: ['./employees-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class EmployeesListComponent implements OnInit {
   employees: EmployeeListItem[] = [];

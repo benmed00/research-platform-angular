@@ -6,13 +6,16 @@
   >
   </app-page-header>
 
-  <app-loading-spinner *ngIf="loading"></app-loading-spinner>
+  @if (loading) {
+    <app-loading-spinner></app-loading-spinner>
+  }
 
-  <app-data-table
-    *ngIf="!loading"
-    [columns]="columnLabels"
-    [data]="documents"
-    [displayedColumns]="displayedColumns"
-  >
-  </app-data-table>
+  @if (!loading) {
+    <app-data-table
+      [columns]="columnLabels"
+      [data]="documents"
+      [displayedColumns]="displayedColumns"
+    >
+    </app-data-table>
+  }
 </div>

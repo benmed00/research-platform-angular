@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ChangeDetectionStrategy } from '@angular/core';
 import { ApiService } from '../../../../core/services/api.service';
 
 export interface EquipmentListItem {
@@ -14,7 +14,9 @@ export interface EquipmentListItem {
 @Component({
   selector: 'app-equipment-list',
   templateUrl: './equipment-list.component.html',
-  styleUrls: ['./equipment-list.component.scss']
+  styleUrls: ['./equipment-list.component.scss'],
+  changeDetection: ChangeDetectionStrategy.Eager,
+  standalone: false
 })
 export class EquipmentListComponent implements OnInit {
   equipment: EquipmentListItem[] = [];

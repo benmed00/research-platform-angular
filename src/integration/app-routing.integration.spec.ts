@@ -1,4 +1,4 @@
-import { TestBed } from '@angular/core/testing';
+import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthGuard } from '../app/core/guards/auth.guard';
@@ -38,33 +38,37 @@ describe('Integration: App routing guards', () => {
     router = TestBed.inject(Router);
   });
 
-  it('should redirect unauthenticated users to login', async () => {
+  it('should redirect unauthenticated users to login', fakeAsync(() => {
     authService.isAuthenticated.and.returnValue(false);
-    await router.navigateByUrl('/dashboard');
+    router.navigateByUrl('/dashboard');
+    tick();
     expect(router.url).toBe('/login?returnUrl=%2Fdashboard');
-  });
+  }));
 
-  it('should allow authenticated users to reach dashboard', async () => {
+  it('should allow authenticated users to reach dashboard', fakeAsync(() => {
     authService.isAuthenticated.and.returnValue(true);
-    await router.navigateByUrl('/dashboard');
+    router.navigateByUrl('/dashboard');
+    tick();
     expect(router.url).toBe('/dashboard');
-  });
+  }));
 
-  it('should block users without required roles', async () => {
+  it('should block users without required roles', fakeAsync(() => {
     authService.isAuthenticated.and.returnValue(true);
     authService.getCurrentUser.and.returnValue(createMockUser({ role: UserRole.BOTANISTE }));
 
-    await router.navigateByUrl('/users');
+    router.navigateByUrl('/users');
+    tick();
     expect(router.url).toBe('/unauthorized');
-  });
+  }));
 
-  it('should allow users with required roles', async () => {
+  it('should allow users with required roles', fakeAsync(() => {
     authService.isAuthenticated.and.returnValue(true);
     authService.getCurrentUser.and.returnValue(
       createMockUser({ role: UserRole.DIRECTEUR_ADMIN_FINANCIER })
     );
 
-    await router.navigateByUrl('/users');
+    router.navigateByUrl('/users');
+    tick();
     expect(router.url).toBe('/users');
-  });
+  }));
 });
