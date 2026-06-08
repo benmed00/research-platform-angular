@@ -85,7 +85,7 @@
     "test:watch": "ng test",
     "test:ci": "ng test --configuration=ci --no-watch --browsers=ChromeHeadless",
     "test:coverage": "ng test --configuration=coverage --no-watch --browsers=ChromeHeadless",
-    "test:mock-api": "node --test \"mock-api/**/*.test.cjs\"",
+    "test:mock-api": "node --test mock-api/server.test.cjs",
     "test:integration": "ng test --no-watch --browsers=ChromeHeadless --include=src/integration/**/*.spec.ts",
     "test:e2e": "node scripts/e2e-smoke.cjs",
     "test:all": "pnpm run test:mock-api && pnpm run test:e2e && pnpm run test:ci",
@@ -97,7 +97,10 @@
     "format": "prettier --write \"src/**/*.{ts,html,scss,json}\" \"mock-api/**/*.{cjs,json}\" \"scripts/**/*.{cjs,json}\" \"docs/**/*.md\" \".github/**/*.yml\" \"*.{json,md,yml,cjs}\"",
     "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\" \"mock-api/**/*.{cjs,json}\" \"scripts/**/*.{cjs,json}\" \"docs/**/*.md\" \".github/**/*.yml\" \"*.{json,md,yml,cjs}\"",
     "validate": "pnpm run format:check && pnpm run lint && pnpm run docs:api && pnpm run build && pnpm run test:all",
-    "prepare": "husky"
+    "prepare": "husky",
+    "corepack enable": "corepack enable",
+    "corepack install": "corepack install",
+    "install": "pnpm install --frozen-lockfile"
   },
   "lint-staged": {
     "*.{ts,html,scss,json,md,yml,cjs}": [
