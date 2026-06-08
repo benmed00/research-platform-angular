@@ -1,0 +1,152 @@
+{
+  "name": "research-platform",
+  "displayName": "Research Platform ERP",
+  "description": "A comprehensive ERP platform for environmental and biodiversity research centers. Includes modules for project management, data collection, reporting, geospatial visualization, and collaborative research workflows.",
+  "version": "1.0.0",
+  "license": "MIT",
+  "author": {
+    "name": "YOUR NAME",
+    "email": "your.email@example.com",
+    "url": "https://your-organization.example.com"
+  },
+  "contributors": [
+    {
+      "name": "YOUR NAME",
+      "email": "your.email@example.com",
+      "url": "https://your-organization.example.com"
+    }
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/your-organization/research-platform.git"
+  },
+  "homepage": "https://your-organization.example.com/research-platform",
+  "bugs": {
+    "url": "https://github.com/your-organization/research-platform/issues",
+    "email": "support@example.com"
+  },
+  "keywords": [
+    "ERP",
+    "Research",
+    "Biodiversity",
+    "Environmental",
+    "Angular",
+    "Geospatial",
+    "Management",
+    "Science",
+    "Platform",
+    "Collaboration"
+  ],
+  "type": "module",
+  "packageManager": "pnpm@9.15.0",
+  "engines": {
+    "node": ">=18.0.0",
+    "pnpm": ">=9.0.0"
+  },
+  "os": [
+    "darwin",
+    "linux",
+    "win32"
+  ],
+  "cpu": [
+    "x64",
+    "arm64"
+  ],
+  "funding": {
+    "type": "individual",
+    "url": "https://your-organization.example.com/donate"
+  },
+  "readme": "README.md",
+  "main": "src/main.ts",
+  "module": "src/app/app.module.ts",
+  "sideEffects": false,
+  "files": [
+    "src/",
+    "README.md",
+    "LICENSE"
+  ],
+  "man": [
+    "docs/usage.1"
+  ],
+  "config": {
+    "env": "development"
+  },
+  "publishConfig": {
+    "access": "restricted"
+  },
+  "scripts": {
+    "ng": "ng",
+    "start": "ng serve",
+    "mock-api": "node mock-api/server.cjs",
+    "build": "ng build",
+    "watch": "ng build --watch --configuration development",
+    "test": "ng test",
+    "test:watch": "ng test",
+    "test:ci": "ng test --configuration=ci --no-watch --browsers=ChromeHeadless",
+    "test:coverage": "ng test --configuration=coverage --no-watch --browsers=ChromeHeadless",
+    "lint": "ng lint",
+    "lint:fix": "ng lint --fix",
+    "format": "prettier --write \"src/**/*.{ts,html,scss,json}\" \"mock-api/**/*.{cjs,json}\" \"docs/**/*.md\" \".github/**/*.yml\" \"*.{json,md,yml,cjs}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\" \"mock-api/**/*.{cjs,json}\" \"docs/**/*.md\" \".github/**/*.yml\" \"*.{json,md,yml,cjs}\"",
+    "validate": "pnpm run format:check && pnpm run lint && pnpm run build && pnpm run test:ci",
+    "prepare": "husky"
+  },
+  "lint-staged": {
+    "*.{ts,html,scss,json,md,yml,cjs}": [
+      "prettier --write"
+    ],
+    "src/**/*.{ts,html}": [
+      "eslint --fix"
+    ]
+  },
+  "private": true,
+  "dependencies": {
+    "@angular/animations": "^17.0.0",
+    "@angular/cdk": "^17.0.0",
+    "@angular/common": "^17.0.0",
+    "@angular/compiler": "^17.0.0",
+    "@angular/core": "^17.0.0",
+    "@angular/forms": "^17.0.0",
+    "@angular/material": "^17.0.0",
+    "@angular/platform-browser": "^17.0.0",
+    "@angular/platform-browser-dynamic": "^17.0.0",
+    "@angular/router": "^17.0.0",
+    "@types/leaflet": "^1.9.8",
+    "chart.js": "^4.4.0",
+    "date-fns": "^2.30.0",
+    "jwt-decode": "^3.1.2",
+    "leaflet": "^1.9.4",
+    "ng2-charts": "^5.0.0",
+    "rxjs": "~7.8.0",
+    "tslib": "^2.3.0",
+    "zone.js": "~0.14.2"
+  },
+  "devDependencies": {
+    "@angular-devkit/build-angular": "^17.0.0",
+    "@angular-eslint/builder": "17",
+    "@angular-eslint/eslint-plugin": "17",
+    "@angular-eslint/eslint-plugin-template": "17",
+    "@angular-eslint/schematics": "17",
+    "@angular-eslint/template-parser": "17",
+    "@angular/cli": "^17.0.0",
+    "@angular/compiler-cli": "^17.0.0",
+    "@commitlint/cli": "^21.0.2",
+    "@commitlint/config-conventional": "^21.0.2",
+    "@types/jasmine": "~5.1.0",
+    "@types/node": "^20.10.0",
+    "@typescript-eslint/eslint-plugin": "^7.18.0",
+    "@typescript-eslint/parser": "^7.18.0",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^10.1.8",
+    "husky": "^9.1.7",
+    "jasmine-core": "~5.1.0",
+    "karma": "~6.4.0",
+    "karma-chrome-launcher": "~3.2.0",
+    "karma-coverage": "~2.2.0",
+    "karma-jasmine": "~5.1.0",
+    "karma-jasmine-html-reporter": "~2.1.0",
+    "lint-staged": "^17.0.7",
+    "prettier": "^3.8.3",
+    "typescript": "~5.2.2"
+  }
+}
