@@ -1,0 +1,45 @@
+{
+  "$schema": "https://typedoc.org/schema.json",
+  "entryPoints": [
+    "src/app/core/services/auth.service.ts",
+    "src/app/core/services/api.service.ts",
+    "src/app/core/guards/auth.guard.ts",
+    "src/app/core/guards/role.guard.ts",
+    "src/app/core/interceptors/auth.interceptor.ts",
+    "src/app/models/user.model.ts",
+    "src/app/models/mission.model.ts",
+    "src/app/models/species.model.ts",
+    "src/app/models/equipment.model.ts",
+    "src/app/models/document.model.ts",
+    "src/app/models/hr.model.ts",
+    "src/app/models/gis.model.ts",
+    "src/app/models/accounting.model.ts",
+    "src/app/models/environmental-data.model.ts",
+    "src/app/models/publishing.model.ts",
+    "src/app/shared/components/data-table/data-table.component.ts",
+    "src/app/shared/components/page-header/page-header.component.ts",
+    "src/app/shared/components/stat-card/stat-card.component.ts",
+    "src/app/shared/components/loading-spinner/loading-spinner.component.ts",
+    "src/testing/test-helpers.ts",
+    "src/testing/mock-api.fixtures.ts",
+    "src/environments/environment.types.ts"
+  ],
+  "out": "docs/api",
+  "readme": "docs/jsdoc-standards.md",
+  "name": "Research Platform ERP — API Reference",
+  "excludePrivate": true,
+  "excludeInternal": true,
+  "categorizeByGroup": true,
+  "categoryOrder": ["Core", "Models", "Shared", "Testing", "Configuration", "*"],
+  "sort": ["source-order"],
+  "navigation": {
+    "includeCategories": true
+  },
+  "searchInComments": true,
+  "validation": {
+    "notExported": false,
+    "invalidLink": true,
+    "notDocumented": false
+  },
+  "gitRevision": false
+}

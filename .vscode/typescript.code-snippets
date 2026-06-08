@@ -1,0 +1,70 @@
+{
+  "JSDoc Method": {
+    "prefix": "jsdoc-method",
+    "scope": "typescript",
+    "body": [
+      "/**",
+      " * ${1:One-line summary.}",
+      " *",
+      " * @param ${2:param} - ${3:Parameter description}",
+      " * @returns ${4:Return value description}",
+      " */"
+    ],
+    "description": "JSDoc block for a public method or function"
+  },
+  "JSDoc Method (void)": {
+    "prefix": "jsdoc-method-void",
+    "scope": "typescript",
+    "body": [
+      "/**",
+      " * ${1:One-line summary.}",
+      " *",
+      " * @param ${2:param} - ${3:Parameter description}",
+      " * @returns {void}",
+      " */"
+    ],
+    "description": "JSDoc block for a void method or function"
+  },
+  "JSDoc Class": {
+    "prefix": "jsdoc-class",
+    "scope": "typescript",
+    "body": [
+      "/**",
+      " * ${1:One-line summary.}",
+      " *",
+      " * @example",
+      " * ```typescript",
+      " * ${2:// usage}",
+      " * ```",
+      " */"
+    ],
+    "description": "JSDoc block for a class, service, guard, or component"
+  },
+  "JSDoc Interface": {
+    "prefix": "jsdoc-interface",
+    "scope": "typescript",
+    "body": [
+      "/**",
+      " * ${1:One-line summary.}",
+      " */"
+    ],
+    "description": "JSDoc block for an interface, type alias, or enum"
+  },
+  "JSDoc Property": {
+    "prefix": "jsdoc-property",
+    "scope": "typescript",
+    "body": ["/** ${1:Field description.} */"],
+    "description": "JSDoc for an interface or class property"
+  },
+  "JSDoc File Header": {
+    "prefix": "jsdoc-file",
+    "scope": "typescript",
+    "body": [
+      "/**",
+      " * @file ${1:File purpose.}",
+      " * @see ${2:docs/related-guide.md}",
+      " */"
+    ],
+    "description": "JSDoc file-level header"
+  }
+}

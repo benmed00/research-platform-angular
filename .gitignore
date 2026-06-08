@@ -13,6 +13,4 @@ coverage
 .env.development
 .env.test
 .env.production
-.env.development.local
-.env.test.local
-.env.production.local
+docs/api

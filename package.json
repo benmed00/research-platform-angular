@@ -76,7 +76,8 @@
   },
   "scripts": {
     "ng": "ng",
-    "start": "ng serve",
+    "serve": "ng serve",
+    "start": "node scripts/start-dev.cjs",
     "mock-api": "node mock-api/server.cjs",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
@@ -84,11 +85,18 @@
     "test:watch": "ng test",
     "test:ci": "ng test --configuration=ci --no-watch --browsers=ChromeHeadless",
     "test:coverage": "ng test --configuration=coverage --no-watch --browsers=ChromeHeadless",
+    "test:mock-api": "node --test mock-api/**/*.test.cjs",
+    "test:integration": "ng test --no-watch --browsers=ChromeHeadless --include=src/integration/**/*.spec.ts",
+    "test:e2e": "node scripts/e2e-smoke.cjs",
+    "test:all": "pnpm run test:mock-api && pnpm run test:e2e && pnpm run test:ci",
+    "coverage:open": "npx --yes open-cli coverage/research-platform/index.html",
     "lint": "ng lint",
     "lint:fix": "ng lint --fix",
-    "format": "prettier --write \"src/**/*.{ts,html,scss,json}\" \"mock-api/**/*.{cjs,json}\" \"docs/**/*.md\" \".github/**/*.yml\" \"*.{json,md,yml,cjs}\"",
-    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\" \"mock-api/**/*.{cjs,json}\" \"docs/**/*.md\" \".github/**/*.yml\" \"*.{json,md,yml,cjs}\"",
-    "validate": "pnpm run format:check && pnpm run lint && pnpm run build && pnpm run test:ci",
+    "docs:api": "typedoc",
+    "docs:api:watch": "typedoc --watch",
+    "format": "prettier --write \"src/**/*.{ts,html,scss,json}\" \"mock-api/**/*.{cjs,json}\" \"scripts/**/*.{cjs,json}\" \"docs/**/*.md\" \".github/**/*.yml\" \"*.{json,md,yml,cjs}\"",
+    "format:check": "prettier --check \"src/**/*.{ts,html,scss,json}\" \"mock-api/**/*.{cjs,json}\" \"scripts/**/*.{cjs,json}\" \"docs/**/*.md\" \".github/**/*.yml\" \"*.{json,md,yml,cjs}\"",
+    "validate": "pnpm run format:check && pnpm run lint && pnpm run docs:api && pnpm run build && pnpm run test:all",
     "prepare": "husky"
   },
   "lint-staged": {
@@ -136,8 +144,10 @@
     "@types/node": "^20.10.0",
     "@typescript-eslint/eslint-plugin": "^7.18.0",
     "@typescript-eslint/parser": "^7.18.0",
+    "concurrently": "^10.0.3",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-jsdoc": "^63.0.2",
     "husky": "^9.1.7",
     "jasmine-core": "~5.1.0",
     "karma": "~6.4.0",
@@ -147,6 +157,7 @@
     "karma-jasmine-html-reporter": "~2.1.0",
     "lint-staged": "^17.0.7",
     "prettier": "^3.8.3",
+    "typedoc": "^0.28.19",
     "typescript": "~5.2.2"
   }
 }

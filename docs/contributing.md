@@ -77,3 +77,4 @@ pnpm run validate
 - [ ] `pnpm run validate` passes locally
 - [ ] New features include unit tests where applicable
 - [ ] Documentation updated when behavior changes
+- [ ] New public APIs include JSDoc per [JSDoc standards](./jsdoc-standards.md)
