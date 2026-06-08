@@ -1,15 +1,15 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
-import { configureSharedComponentTest } from '../../../../testing/test-helpers';
+import { configureSharedComponentTest, spyRouter } from '../../../../testing/test-helpers';
 import { UnauthorizedComponent } from './unauthorized.component';
 
 describe('UnauthorizedComponent', () => {
   let component: UnauthorizedComponent;
   let fixture: ComponentFixture<UnauthorizedComponent>;
-  let router: jasmine.SpyObj<Router>;
+  let router: Router;
 
   beforeEach(async () => {
-    router = jasmine.createSpyObj('Router', ['navigate']);
+    router = spyRouter();
 
     await configureSharedComponentTest(UnauthorizedComponent);
     TestBed.overrideProvider(Router, { useValue: router });

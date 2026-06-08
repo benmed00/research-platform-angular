@@ -4,14 +4,15 @@ import { ApiService } from './api.service';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
 import { provideHttpClient, withInterceptorsFromDi, withXhr } from '@angular/common/http';
+import { spyAuthService } from '../../../testing/test-helpers';
 
 describe('ApiService', () => {
   let service: ApiService;
   let httpMock: HttpTestingController;
-  let authService: jasmine.SpyObj<AuthService>;
+  let authService: AuthService;
 
   beforeEach(() => {
-    authService = jasmine.createSpyObj('AuthService', ['getToken']);
+    authService = spyAuthService();
 
     TestBed.configureTestingModule({
       imports: [],
@@ -36,7 +37,7 @@ describe('ApiService', () => {
   });
 
   it('should GET without auth header when no token is present', () => {
-    authService.getToken.and.returnValue(null);
+    vi.mocked(authService.getToken).mockReturnValue(null);
 
     service.get('/users').subscribe((response) => {
       expect(response).toEqual([{ id: '1' }]);
@@ -44,12 +45,12 @@ describe('ApiService', () => {
 
     const req = httpMock.expectOne(`${environment.apiUrl}/users`);
     expect(req.request.method).toBe('GET');
-    expect(req.request.headers.has('Authorization')).toBeFalse();
+    expect(req.request.headers.has('Authorization')).toBe(false);
     req.flush([{ id: '1' }]);
   });
 
   it('should attach bearer token and query params on GET', () => {
-    authService.getToken.and.returnValue('test-token');
+    vi.mocked(authService.getToken).mockReturnValue('test-token');
 
     service.get('/users', { active: true, page: 2 }).subscribe();
 
@@ -64,7 +65,7 @@ describe('ApiService', () => {
   });
 
   it('should POST JSON payloads', () => {
-    authService.getToken.and.returnValue(null);
+    vi.mocked(authService.getToken).mockReturnValue(null);
     const payload = { name: 'Mission Alpha' };
 
     service.post('/missions', payload).subscribe((response) => {
@@ -78,7 +79,7 @@ describe('ApiService', () => {
   });
 
   it('should PUT JSON payloads', () => {
-    authService.getToken.and.returnValue('test-token');
+    vi.mocked(authService.getToken).mockReturnValue('test-token');
     const payload = { name: 'Updated' };
 
     service.put('/missions/1', payload).subscribe((response) => {
@@ -92,7 +93,7 @@ describe('ApiService', () => {
   });
 
   it('should DELETE resources', () => {
-    authService.getToken.and.returnValue('test-token');
+    vi.mocked(authService.getToken).mockReturnValue('test-token');
 
     service.delete('/missions/1').subscribe((response) => {
       expect(response).toBeNull();
@@ -104,7 +105,7 @@ describe('ApiService', () => {
   });
 
   it('should upload multipart files with optional fields', () => {
-    authService.getToken.and.returnValue('test-token');
+    vi.mocked(authService.getToken).mockReturnValue('test-token');
     const file = new File(['content'], 'report.pdf', { type: 'application/pdf' });
 
     service.uploadFile('/documents', file, { category: 'report' }).subscribe((response) => {
@@ -113,7 +114,7 @@ describe('ApiService', () => {
 
     const req = httpMock.expectOne(`${environment.apiUrl}/documents`);
     expect(req.request.method).toBe('POST');
-    expect(req.request.body instanceof FormData).toBeTrue();
+    expect(req.request.body instanceof FormData).toBe(true);
     expect(req.request.headers.get('Authorization')).toBe('Bearer test-token');
     expect(req.request.headers.get('Content-Type')).toBeNull();
     req.flush({ id: 'doc-1' });

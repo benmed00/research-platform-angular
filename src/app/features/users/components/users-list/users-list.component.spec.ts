@@ -33,7 +33,7 @@ describe('UsersListComponent', () => {
     expect(request.request.method).toBe('GET');
     request.flush(users);
 
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     expect(component.users).toEqual(users);
   });
 
@@ -43,7 +43,7 @@ describe('UsersListComponent', () => {
       statusText: 'Internal Server Error'
     });
 
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     expect(component.users).toEqual([]);
   });
 

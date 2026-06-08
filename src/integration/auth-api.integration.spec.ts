@@ -63,7 +63,7 @@ describe('Integration: Auth API contract', () => {
         { status: 401, statusText: 'Unauthorized' }
       );
 
-    expect(receivedError).toBeTrue();
+    expect(receivedError).toBe(true);
     expect(authService.getToken()).toBeNull();
   });
 });

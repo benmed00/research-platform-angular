@@ -26,7 +26,7 @@ describe('EmployeesListComponent', () => {
     const employees = createMockEmployees();
     httpMock.expectOne('/api/employees').flush(employees);
 
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     expect(component.employees).toEqual(employees);
   });
 

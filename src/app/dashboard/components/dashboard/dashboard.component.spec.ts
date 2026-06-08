@@ -2,7 +2,11 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from '../../../core/services/auth.service';
 import { UserRole } from '../../../models/user.model';
-import { configureFeatureModuleTest, createMockUser } from '../../../../testing/test-helpers';
+import {
+  configureFeatureModuleTest,
+  createMockUser,
+  spyAuthService
+} from '../../../../testing/test-helpers';
 import { createMockDashboardStats } from '../../../../testing/mock-api.fixtures';
 import { DashboardModule } from '../../dashboard.module';
 import { DashboardComponent } from './dashboard.component';
@@ -10,13 +14,13 @@ import { DashboardComponent } from './dashboard.component';
 describe('DashboardComponent', () => {
   let component: DashboardComponent;
   let fixture: ComponentFixture<DashboardComponent>;
-  let authService: jasmine.SpyObj<AuthService>;
+  let authService: AuthService;
   let httpMock: HttpTestingController;
 
   beforeEach(async () => {
-    authService = jasmine.createSpyObj('AuthService', ['getCurrentUser', 'getToken']);
-    authService.getCurrentUser.and.returnValue(null);
-    authService.getToken.and.returnValue(null);
+    authService = spyAuthService();
+    vi.mocked(authService.getCurrentUser).mockReturnValue(null);
+    vi.mocked(authService.getToken).mockReturnValue(null);
 
     await configureFeatureModuleTest(DashboardModule);
     TestBed.overrideProvider(AuthService, { useValue: authService });
@@ -40,7 +44,7 @@ describe('DashboardComponent', () => {
     const stats = createMockDashboardStats();
     httpMock.expectOne('/api/dashboard/stats').flush(stats);
 
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     expect(component.stats).toEqual(stats);
   });
 
@@ -50,7 +54,7 @@ describe('DashboardComponent', () => {
       statusText: 'Internal Server Error'
     });
 
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     expect(component.stats).toEqual([]);
   });
 
@@ -61,7 +65,7 @@ describe('DashboardComponent', () => {
 
   it('should return role-specific title when user is loaded', () => {
     httpMock.expectOne('/api/dashboard/stats').flush([]);
-    authService.getCurrentUser.and.returnValue(
+    vi.mocked(authService.getCurrentUser).mockReturnValue(
       createMockUser({ role: UserRole.DIRECTEUR_SCIENTIFIQUE })
     );
     component.currentUser = authService.getCurrentUser();

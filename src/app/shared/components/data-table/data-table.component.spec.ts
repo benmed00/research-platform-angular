@@ -51,15 +51,15 @@ describe('DataTableComponent', () => {
 
   it('should emit edit events', () => {
     const row = component.data[0];
-    spyOn(component.edit, 'emit');
+    vi.spyOn(component.edit, 'emit').mockReturnValue(undefined);
     component.onEdit(row);
     expect(component.edit.emit).toHaveBeenCalledWith(row);
   });
 
   it('should emit delete and view events', () => {
     const row = component.data[1];
-    spyOn(component.delete, 'emit');
-    spyOn(component.view, 'emit');
+    vi.spyOn(component.delete, 'emit').mockReturnValue(undefined);
+    vi.spyOn(component.view, 'emit').mockReturnValue(undefined);
 
     component.onDelete(row);
     component.onView(row);

@@ -57,7 +57,7 @@ describe('Integration: Auth stack (login → token → API)', () => {
   it('should complete login and attach bearer token to subsequent API calls', () => {
     const loginFixture = TestBed.createComponent(LoginComponent);
     const loginComponent = loginFixture.componentInstance;
-    spyOn(router, 'navigate');
+    vi.spyOn(router, 'navigate').mockResolvedValue(true);
 
     const credentials = {
       email: mockApiAccounts[1].email,

@@ -26,7 +26,7 @@ describe('EquipmentListComponent', () => {
     const equipment = createMockEquipment();
     httpMock.expectOne('/api/equipment').flush(equipment);
 
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     expect(component.equipment).toEqual(equipment);
   });
 

@@ -26,7 +26,7 @@ describe('DocumentsListComponent', () => {
     const documents = createMockDocuments();
     httpMock.expectOne('/api/documents').flush(documents);
 
-    expect(component.loading).toBeFalse();
+    expect(component.loading).toBe(false);
     expect(component.documents).toEqual(documents);
   });
 
