@@ -2,7 +2,7 @@ import { TestBed } from '@angular/core/testing';
 import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
 import { AuthService } from './auth.service';
 import { Permission, UserRole } from '../../models/user.model';
-import { createJwt } from '../../../testing/test-helpers';
+import { createJwt, createMockUser } from '../../../testing/test-helpers';
 
 describe('AuthService', () => {
   let service: AuthService;
@@ -46,6 +46,42 @@ describe('AuthService', () => {
   it('should return false for an invalid token', () => {
     localStorage.setItem('token', 'not-a-valid-jwt');
     expect(service.isAuthenticated()).toBeFalse();
+  });
+
+  it('should return false when token has no expiration claim', () => {
+    const header = btoa(JSON.stringify({ alg: 'HS256', typ: 'JWT' }));
+    const payload = btoa(JSON.stringify({ sub: 'user' }));
+    localStorage.setItem('token', `${header}.${payload}.signature`);
+    expect(service.isAuthenticated()).toBeFalse();
+  });
+
+  it('should return false for hasPermission when no user is loaded', () => {
+    expect(service.hasPermission(Permission.READ)).toBeFalse();
+  });
+
+  it('should return false for hasRole when no user is loaded', () => {
+    expect(service.hasRole(UserRole.BOTANISTE)).toBeFalse();
+  });
+
+  it('should emit current user changes through currentUser$', () => {
+    const response = {
+      token: createJwt(Math.floor(Date.now() / 1000) + 3600),
+      expiresIn: 3600,
+      user: createMockUser({ email: 'stream@example.com' })
+    };
+    let emittedEmail: string | undefined;
+
+    service.currentUser$.subscribe((user) => {
+      if (user) {
+        emittedEmail = user.email;
+      }
+    });
+
+    service.login({ email: 'stream@example.com', password: 'secret' }).subscribe();
+    httpMock.expectOne('/api/auth/login').flush(response);
+
+    expect(emittedEmail).toBe('stream@example.com');
+    expect(service.getCurrentUser()?.email).toBe('stream@example.com');
   });
 
   it('should persist token and user on login', () => {
@@ -111,5 +147,41 @@ describe('AuthService', () => {
     expect(service.hasRole(UserRole.BOTANISTE)).toBeFalse();
     expect(service.hasPermission(Permission.ADMIN)).toBeTrue();
     expect(service.hasPermission(Permission.DELETE)).toBeFalse();
+  });
+});
+
+describe('AuthService storage bootstrap', () => {
+  let httpMock: HttpTestingController;
+
+  beforeEach(() => {
+    localStorage.clear();
+    TestBed.configureTestingModule({
+      imports: [HttpClientTestingModule],
+      providers: [AuthService]
+    });
+    httpMock = TestBed.inject(HttpTestingController);
+  });
+
+  afterEach(() => {
+    httpMock.verify();
+    localStorage.clear();
+  });
+
+  it('should restore user from localStorage on init', () => {
+    const user = createMockUser({ email: 'stored@example.com' });
+    localStorage.setItem('user', JSON.stringify(user));
+
+    const service = TestBed.inject(AuthService);
+    expect(service.getCurrentUser()?.email).toBe(user.email);
+    expect(service.getCurrentUser()?.role).toBe(user.role);
+  });
+
+  it('should clear storage when stored user JSON is invalid', () => {
+    localStorage.setItem('user', 'not-json');
+    localStorage.setItem('token', 'token');
+
+    const service = TestBed.inject(AuthService);
+    expect(service.getCurrentUser()).toBeNull();
+    expect(service.getToken()).toBeNull();
   });
 });

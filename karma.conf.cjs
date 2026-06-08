@@ -31,7 +31,15 @@ module.exports = function (config) {
         { type: 'html' },
         { type: 'text-summary' },
         { type: 'lcovonly', file: 'lcov.info' }
-      ]
+      ],
+      check: {
+        global: {
+          statements: 90,
+          branches: 85,
+          functions: 90,
+          lines: 90
+        }
+      }
     },
     reporters: isCI ? ['progress', 'coverage'] : ['progress', 'kjhtml'],
     browsers: isCI ? ['ChromeHeadless'] : ['Chrome'],

@@ -56,8 +56,33 @@ describe('DataTableComponent', () => {
     expect(component.edit.emit).toHaveBeenCalledWith(row);
   });
 
-  it('should filter rows from the search input', () => {
-    component.applyFilter({ target: { value: 'alice' } } as unknown as Event);
+  it('should emit delete and view events', () => {
+    const row = component.data[1];
+    spyOn(component.delete, 'emit');
+    spyOn(component.view, 'emit');
+
+    component.onDelete(row);
+    component.onView(row);
+
+    expect(component.delete.emit).toHaveBeenCalledWith(row);
+    expect(component.view.emit).toHaveBeenCalledWith(row);
+  });
+
+  it('should trim and lowercase filter values', () => {
+    component.applyFilter({ target: { value: '  ALICE  ' } } as unknown as Event);
     expect(component.dataSource.filter).toBe('alice');
+  });
+
+  it('should refresh data source on ngOnChanges', () => {
+    const nextData = [{ firstName: 'Carol', lastName: 'Bernard', email: 'carol@example.com' }];
+    fixture.componentRef.setInput('data', nextData);
+    component.ngOnChanges();
+    expect(component.dataSource.data).toEqual(nextData);
+  });
+
+  it('should wire paginator and sort on ngAfterViewInit', () => {
+    component.ngAfterViewInit();
+    expect(component.dataSource.paginator).toBe(component.paginator);
+    expect(component.dataSource.sort).toBe(component.sort);
   });
 });

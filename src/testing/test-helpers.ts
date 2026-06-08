@@ -1,3 +1,9 @@
+import { Type } from '@angular/core';
+import { TestBed } from '@angular/core/testing';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { NoopAnimationsModule } from '@angular/platform-browser/animations';
+import { RouterTestingModule } from '@angular/router/testing';
+import { SharedModule } from '../app/shared/shared.module';
 import { Permission, User, UserRole } from '../app/models/user.model';
 
 /**
@@ -100,8 +106,8 @@ export function createJwt(exp: number): string {
  * Default values cover all core user fields, including role and permissions.
  * Partial overrides allow simulating any subset of the User interface.
  *
- * @param overrides - Partial User fields to override default mock values.
- * @returns A new mock User with defaults merged with overrides.
+ * @param overrides - Partial User fields to override default mock values
+ * @returns A new mock User with defaults merged with overrides
  *
  * @example
  * ```typescript
@@ -130,4 +136,29 @@ export function createMockUser(overrides: MockUserOverrides = {}): User {
 
   const user: User = { ...defaults, ...overrides };
   return user;
+}
+
+/**
+ * Configures TestBed for a feature module smoke test (SharedModule + HTTP + router stubs).
+ *
+ * @param moduleType - Angular module class to import into TestBed
+ * @returns Resolves when TestBed compilation completes
+ */
+export async function configureFeatureModuleTest(moduleType: Type<unknown>): Promise<void> {
+  await TestBed.configureTestingModule({
+    imports: [moduleType, NoopAnimationsModule, HttpClientTestingModule, RouterTestingModule]
+  }).compileComponents();
+}
+
+/**
+ * Configures TestBed for a declared component with SharedModule dependencies.
+ *
+ * @param component - Component class to declare in TestBed
+ * @returns Resolves when TestBed compilation completes
+ */
+export async function configureSharedComponentTest(component: Type<unknown>): Promise<void> {
+  await TestBed.configureTestingModule({
+    imports: [SharedModule, NoopAnimationsModule, RouterTestingModule, HttpClientTestingModule],
+    declarations: [component]
+  }).compileComponents();
 }
