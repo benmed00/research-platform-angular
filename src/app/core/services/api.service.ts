@@ -4,6 +4,12 @@ import { Observable } from 'rxjs';
 import { AuthService } from './auth.service';
 import { environment } from '../../../environments/environment';
 
+/** Query string values accepted by {@link ApiService.get}. */
+export type ApiQueryParams = Record<string, string | number | boolean>;
+
+/** Additional multipart fields for {@link ApiService.uploadFile}. */
+export type ApiUploadFields = Record<string, string | Blob>;
+
 @Injectable({
   providedIn: 'root'
 })
@@ -28,7 +34,7 @@ export class ApiService {
     return headers;
   }
 
-  get<T>(endpoint: string, params?: any): Observable<T> {
+  get<T>(endpoint: string, params?: ApiQueryParams): Observable<T> {
     let httpParams = new HttpParams();
     if (params) {
       Object.keys(params).forEach((key) => {
@@ -42,13 +48,13 @@ export class ApiService {
     });
   }
 
-  post<T>(endpoint: string, data: any): Observable<T> {
+  post<T>(endpoint: string, data: unknown): Observable<T> {
     return this.http.post<T>(`${this.baseUrl}${endpoint}`, data, {
       headers: this.getHeaders()
     });
   }
 
-  put<T>(endpoint: string, data: any): Observable<T> {
+  put<T>(endpoint: string, data: unknown): Observable<T> {
     return this.http.put<T>(`${this.baseUrl}${endpoint}`, data, {
       headers: this.getHeaders()
     });
@@ -60,7 +66,7 @@ export class ApiService {
     });
   }
 
-  uploadFile(endpoint: string, file: File, additionalData?: any): Observable<any> {
+  uploadFile(endpoint: string, file: File, additionalData?: ApiUploadFields): Observable<unknown> {
     const formData = new FormData();
     formData.append('file', file);
 

@@ -70,7 +70,7 @@ export enum SectionType {
 export interface SectionContent {
   text?: string;
   dataSource?: string;
-  filters?: Record<string, any>;
+  filters?: Record<string, unknown>;
   template?: string;
 }
 
@@ -78,7 +78,7 @@ export interface Chart {
   id: string;
   type: ChartType;
   title: string;
-  data: any;
+  data: unknown;
   config: ChartConfig;
 }
 
@@ -102,7 +102,7 @@ export interface Table {
   id: string;
   title: string;
   headers: string[];
-  rows: any[][];
+  rows: unknown[][];
   pagination?: boolean;
 }
 

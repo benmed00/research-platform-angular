@@ -6,7 +6,7 @@ export interface MapLayer {
   opacity: number;
   data: GeoJSON.FeatureCollection;
   style?: LayerStyle;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export enum LayerType {
@@ -70,6 +70,6 @@ export enum GeometryType {
 export interface SpatialFeature {
   id: string;
   geometry: Geometry;
-  properties: Record<string, any>;
+  properties: Record<string, unknown>;
   layerId: string;
 }

@@ -12,7 +12,7 @@ export interface Equipment {
   assignedTo?: string; // User ID
   assignedToMission?: string; // Mission ID
   maintenanceRecords: MaintenanceRecord[];
-  specifications?: Record<string, any>;
+  specifications?: Record<string, unknown>;
   photos?: string[];
 }
 

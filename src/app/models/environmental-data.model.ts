@@ -6,7 +6,7 @@ export interface EnvironmentalData {
   values: DataValues;
   source: DataSource;
   quality: DataQuality;
-  metadata?: Record<string, any>;
+  metadata?: Record<string, unknown>;
 }
 
 export enum DataType {

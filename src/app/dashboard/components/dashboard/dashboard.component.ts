@@ -2,6 +2,15 @@ import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../core/services/auth.service';
 import { User, UserRole } from '../../../models/user.model';
 
+/** Dashboard summary tile rendered by the shared stat-card component. */
+export interface DashboardStat {
+  title: string;
+  value: string;
+  icon: string;
+  color: string;
+  trend: { value: number; isPositive: boolean };
+}
+
 @Component({
   selector: 'app-dashboard',
   templateUrl: './dashboard.component.html',
@@ -9,7 +18,7 @@ import { User, UserRole } from '../../../models/user.model';
 })
 export class DashboardComponent implements OnInit {
   currentUser: User | null = null;
-  stats: any[] = [];
+  stats: DashboardStat[] = [];
 
   constructor(private authService: AuthService) {}
 
