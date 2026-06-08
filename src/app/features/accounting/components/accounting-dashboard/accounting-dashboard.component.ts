@@ -1,11 +1,22 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  OnInit,
+  inject
+} from '@angular/core';
 import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
+import { ApiService } from '../../../../core/services/api.service';
+
+interface AccountingSummary {
+  budgetTotal: string;
+  budgetConsumed: string;
+  pendingInvoices: number;
+  approvedGrants: number;
+}
 
 /**
- * Accounting module dashboard for budgets, invoices, and financial reports.
- *
- * @remarks Implementation pending — placeholder for the accounting feature module.
- * @see accounting.model — Budget
+ * Accounting overview with budget and invoice summary tiles.
  */
 @Component({
   selector: 'app-accounting-dashboard',
@@ -15,4 +26,33 @@ import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
   standalone: true,
   imports: [SHARED_IMPORTS]
 })
-export class AccountingDashboardComponent {}
+export class AccountingDashboardComponent implements OnInit {
+  private readonly apiService = inject(ApiService);
+  private readonly cdr = inject(ChangeDetectorRef);
+
+  loading = false;
+  summary: AccountingSummary | null = null;
+
+  /**
+   * Loads accounting summary data on init.
+   *
+   * @returns Nothing.
+   */
+  ngOnInit(): void {
+    this.loading = true;
+    this.cdr.markForCheck();
+
+    this.apiService.get<AccountingSummary>('/accounting/summary').subscribe({
+      next: (summary) => {
+        this.summary = summary;
+        this.loading = false;
+        this.cdr.markForCheck();
+      },
+      error: () => {
+        this.summary = null;
+        this.loading = false;
+        this.cdr.markForCheck();
+      }
+    });
+  }
+}

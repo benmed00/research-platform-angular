@@ -5,6 +5,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatDividerModule } from '@angular/material/divider';
 import { MatDialogModule } from '@angular/material/dialog';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -38,6 +39,7 @@ export const MATERIAL_IMPORTS = [
   MatSidenavModule,
   MatListModule,
   MatMenuModule,
+  MatDividerModule,
   MatDialogModule,
   MatDatepickerModule,
   MatNativeDateModule,

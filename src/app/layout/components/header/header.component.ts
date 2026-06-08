@@ -1,14 +1,17 @@
 import {
+  ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
-  Output,
+  DestroyRef,
   EventEmitter,
-  ChangeDetectionStrategy,
+  OnInit,
+  Output,
   inject
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { SHARED_IMPORTS } from '../../../shared/shared-imports';
 import { AuthService } from '../../../core/services/auth.service';
-import { Router } from '@angular/router';
 import { User } from '../../../models/user.model';
 
 /**
@@ -22,25 +25,24 @@ import { User } from '../../../models/user.model';
   standalone: true,
   imports: [SHARED_IMPORTS]
 })
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
+  private readonly authService = inject(AuthService);
+  private readonly router = inject(Router);
   private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
 
   @Output() toggleSidebar = new EventEmitter<void>();
 
-  currentUser: User | null;
+  currentUser: User | null = null;
 
   /**
-   * Injects auth service and router for session display and logout.
+   * Initializes the header with the current user and listens for auth updates.
    *
-   * @param authService - Provides current user state and logout
-   * @param router - Navigates to login after logout
+   * @returns Nothing.
    */
-  constructor(
-    private authService: AuthService,
-    private router: Router
-  ) {
+  ngOnInit(): void {
     this.currentUser = this.authService.getCurrentUser();
-    this.authService.currentUser$.subscribe((user) => {
+    this.authService.currentUser$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((user) => {
       this.currentUser = user;
       this.cdr.markForCheck();
     });
@@ -62,6 +64,6 @@ export class HeaderComponent {
    */
   logout(): void {
     this.authService.logout();
-    this.router.navigate(['/login']);
+    void this.router.navigate(['/login']);
   }
 }

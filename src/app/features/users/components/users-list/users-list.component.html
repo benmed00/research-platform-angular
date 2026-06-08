@@ -7,20 +7,27 @@
   </app-page-header>
 
   <div class="actions-bar">
-    <button mat-raised-button color="primary">
+    <button mat-raised-button color="primary" type="button" (click)="createUser()">
       <mat-icon>add</mat-icon>
       Nouvel utilisateur
     </button>
   </div>
 
-  <app-data-table
-    [columns]="columnLabels"
-    [data]="users"
-    [displayedColumns]="displayedColumns"
-    [showActions]="true"
-    (edit)="onEdit($event)"
-    (delete)="onDelete($event)"
-    (view)="onView($event)"
-  >
-  </app-data-table>
+  @if (loading) {
+    <app-loading-spinner></app-loading-spinner>
+  }
+
+  @if (!loading) {
+    <app-data-table
+      [columns]="columnLabels"
+      [data]="users"
+      [displayedColumns]="displayedColumns"
+      [valueFormatters]="valueFormatters"
+      [showActions]="true"
+      (edit)="onEdit($event)"
+      (delete)="onDelete($event)"
+      (view)="onView($event)"
+    >
+    </app-data-table>
+  }
 </div>

@@ -6,6 +6,8 @@ import {
   inject
 } from '@angular/core';
 import { SHARED_IMPORTS } from '../../../../shared/shared-imports';
+import { DataTableValueFormatter } from '../../../../shared/components/data-table/data-table.component';
+import { formatMissionStatus } from '../../../../shared/display-formatters';
 import { ApiService } from '../../../../core/services/api.service';
 
 export interface MissionListItem {
@@ -37,13 +39,11 @@ export class MissionsListComponent implements OnInit {
     status: 'Statut',
     startDate: 'Début'
   };
+  valueFormatters: Record<string, DataTableValueFormatter> = {
+    status: (row) => formatMissionStatus((row as MissionListItem).status)
+  };
 
-  /**
-   * Injects the API service for loading mission records.
-   *
-   * @param apiService - Loads mission records from the API
-   */
-  constructor(private apiService: ApiService) {}
+  private readonly apiService = inject(ApiService);
 
   /**
    * Loads missions on component init.

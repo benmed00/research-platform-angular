@@ -6,9 +6,44 @@
   >
   </app-page-header>
 
-  <mat-card>
-    <mat-card-content>
-      <p>Module comptabilité en développement</p>
-    </mat-card-content>
-  </mat-card>
+  @if (loading) {
+    <app-loading-spinner></app-loading-spinner>
+  }
+
+  @if (!loading && !summary) {
+    <mat-card>
+      <mat-card-content>
+        <p>Impossible de charger les données comptables. Vérifiez que le mock API est démarré.</p>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (!loading && summary) {
+    <div class="stats-grid">
+      <app-stat-card
+        title="Budget total"
+        [value]="summary.budgetTotal"
+        icon="savings"
+        color="#2980b9"
+      ></app-stat-card>
+      <app-stat-card
+        title="Budget consommé"
+        [value]="summary.budgetConsumed"
+        icon="payments"
+        color="#e67e22"
+      ></app-stat-card>
+      <app-stat-card
+        title="Factures en attente"
+        [value]="summary.pendingInvoices.toString()"
+        icon="receipt_long"
+        color="#c0392b"
+      ></app-stat-card>
+      <app-stat-card
+        title="Subventions approuvées"
+        [value]="summary.approvedGrants.toString()"
+        icon="verified"
+        color="#27ae60"
+      ></app-stat-card>
+    </div>
+  }
 </div>

@@ -5,6 +5,9 @@ const { resourceRoutes } = require('./fixtures/resources.cjs');
 const PORT = 3000;
 const TOKEN_TTL_SECONDS = 8 * 3600;
 
+/** @type {import('./fixtures/accounts.cjs').accounts[number]['user'][] | null} */
+let userStore = null;
+
 function createJwt(exp) {
   const header = Buffer.from(JSON.stringify({ alg: 'none', typ: 'JWT' })).toString('base64url');
   const payload = Buffer.from(JSON.stringify({ exp, sub: 'mock-user' })).toString('base64url');
@@ -43,8 +46,32 @@ function isAuthorized(req) {
   return typeof authorization === 'string' && authorization.startsWith('Bearer ');
 }
 
+function getUserStore() {
+  if (!userStore) {
+    userStore = accounts.map((account) => structuredClone(account.user));
+  }
+  return userStore;
+}
+
+function resetUserStore() {
+  userStore = null;
+}
+
+function serializeUser(user) {
+  return {
+    ...user,
+    status: user.isActive ? 'Actif' : 'Inactif',
+    createdAt: user.createdAt,
+    updatedAt: user.updatedAt
+  };
+}
+
 function listPublicUsers() {
-  return accounts.map((account) => account.user);
+  return getUserStore().map((user) => serializeUser(user));
+}
+
+function findUserById(id) {
+  return getUserStore().find((user) => user.id === id) ?? null;
 }
 
 function sendProtectedResource(req, res, pathname) {
@@ -69,6 +96,7 @@ async function handleRequest(req, res, basePort = PORT) {
   }
 
   const url = new URL(req.url, `http://localhost:${basePort}`);
+  const userIdMatch = url.pathname.match(/^\/api\/users\/([^/]+)$/);
 
   if (req.method === 'POST' && url.pathname === '/api/auth/login') {
     try {
@@ -110,6 +138,95 @@ async function handleRequest(req, res, basePort = PORT) {
     return;
   }
 
+  if (userIdMatch) {
+    const userId = userIdMatch[1];
+
+    if (!isAuthorized(req)) {
+      sendJson(res, 401, { message: 'Unauthorized' });
+      return;
+    }
+
+    if (req.method === 'GET') {
+      const user = findUserById(userId);
+      if (!user) {
+        sendJson(res, 404, { message: 'User not found' });
+        return;
+      }
+      sendJson(res, 200, serializeUser(user));
+      return;
+    }
+
+    if (req.method === 'PUT') {
+      try {
+        const body = await readBody(req);
+        const index = getUserStore().findIndex((user) => user.id === userId);
+        if (index === -1) {
+          sendJson(res, 404, { message: 'User not found' });
+          return;
+        }
+
+        const current = getUserStore()[index];
+        const updated = {
+          ...current,
+          ...body,
+          id: current.id,
+          updatedAt: new Date().toISOString()
+        };
+        getUserStore()[index] = updated;
+        sendJson(res, 200, serializeUser(updated));
+        return;
+      } catch {
+        sendJson(res, 400, { message: 'Requête invalide' });
+        return;
+      }
+    }
+
+    if (req.method === 'DELETE') {
+      const index = getUserStore().findIndex((user) => user.id === userId);
+      if (index === -1) {
+        sendJson(res, 404, { message: 'User not found' });
+        return;
+      }
+      getUserStore().splice(index, 1);
+      sendJson(res, 200, { success: true });
+      return;
+    }
+  }
+
+  if (req.method === 'POST' && url.pathname === '/api/users') {
+    if (!isAuthorized(req)) {
+      sendJson(res, 401, { message: 'Unauthorized' });
+      return;
+    }
+
+    try {
+      const body = await readBody(req);
+      const duplicate = getUserStore().some((user) => user.email === body.email);
+      if (duplicate) {
+        sendJson(res, 409, { message: 'Email déjà utilisé' });
+        return;
+      }
+
+      const created = {
+        id: `user-${Date.now()}`,
+        email: body.email,
+        firstName: body.firstName,
+        lastName: body.lastName,
+        role: body.role,
+        permissions: body.permissions ?? ['READ', 'WRITE'],
+        isActive: body.isActive ?? true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
+      };
+      getUserStore().push(created);
+      sendJson(res, 201, serializeUser(created));
+      return;
+    } catch {
+      sendJson(res, 400, { message: 'Requête invalide' });
+      return;
+    }
+  }
+
   if (req.method === 'GET' && sendProtectedResource(req, res, url.pathname)) {
     return;
   }
@@ -137,6 +254,7 @@ module.exports = {
   isAuthorized,
   listPublicUsers,
   readBody,
+  resetUserStore,
   resourceRoutes,
   sendJson
 };

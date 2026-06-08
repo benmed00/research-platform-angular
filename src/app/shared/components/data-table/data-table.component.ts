@@ -1,4 +1,6 @@
 import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
   Component,
   Input,
   Output,
@@ -6,9 +8,8 @@ import {
   ViewChild,
   OnChanges,
   AfterViewInit,
-  ChangeDetectionStrategy
+  inject
 } from '@angular/core';
-
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,6 +18,10 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatPaginator, MatPaginatorModule } from '@angular/material/paginator';
 import { MatSort, MatSortModule } from '@angular/material/sort';
 import { MatTableDataSource, MatTableModule } from '@angular/material/table';
+import { MatTooltipModule } from '@angular/material/tooltip';
+
+/** Column-specific formatter used by {@link DataTableComponent}. */
+export type DataTableValueFormatter = (row: object, column: string) => string;
 
 /**
  * Reusable Material table with filtering, pagination, sorting, and optional row actions.
@@ -44,16 +49,20 @@ import { MatTableDataSource, MatTableModule } from '@angular/material/table';
     MatMenuModule,
     MatPaginatorModule,
     MatSortModule,
-    MatTableModule
+    MatTableModule,
+    MatTooltipModule
   ]
 })
 export class DataTableComponent implements OnChanges, AfterViewInit {
+  private readonly cdr = inject(ChangeDetectorRef);
+
   @Input() columns: Record<string, string> = {};
   @Input() data: object[] = [];
   @Input() displayedColumns: string[] = [];
   @Input() showActions: boolean = false;
   @Input() pageSize: number = 10;
   @Input() pageSizeOptions: number[] = [5, 10, 25, 100];
+  @Input() valueFormatters: Record<string, DataTableValueFormatter> = {};
 
   @Output() edit = new EventEmitter<object>();
   @Output() delete = new EventEmitter<object>();
@@ -84,6 +93,27 @@ export class DataTableComponent implements OnChanges, AfterViewInit {
   }
 
   /**
+   * Resolves the display value for a table cell.
+   *
+   * @param row - Table row object
+   * @param column - Column key
+   * @returns Formatted cell value
+   */
+  getCellValue(row: object, column: string): string {
+    const formatter = this.valueFormatters[column];
+    if (formatter) {
+      return formatter(row, column);
+    }
+
+    const value = (row as Record<string, unknown>)[column];
+    if (value === null || value === undefined) {
+      return '';
+    }
+
+    return String(value);
+  }
+
+  /**
    * Syncs input data with the table data source and rebinds paginator/sort when available.
    *
    * @returns Nothing.
@@ -96,6 +126,7 @@ export class DataTableComponent implements OnChanges, AfterViewInit {
     if (this.sort) {
       this.dataSource.sort = this.sort;
     }
+    this.cdr.markForCheck();
   }
 
   /**
@@ -106,6 +137,7 @@ export class DataTableComponent implements OnChanges, AfterViewInit {
   ngAfterViewInit(): void {
     this.dataSource.paginator = this.paginator;
     this.dataSource.sort = this.sort;
+    this.cdr.markForCheck();
   }
 
   /**
@@ -117,6 +149,7 @@ export class DataTableComponent implements OnChanges, AfterViewInit {
   applyFilter(event: Event): void {
     const filterValue = (event.target as HTMLInputElement).value;
     this.dataSource.filter = filterValue.trim().toLowerCase();
+    this.cdr.markForCheck();
   }
 
   /**

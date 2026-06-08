@@ -6,9 +6,46 @@
   >
   </app-page-header>
 
-  <mat-card>
-    <mat-card-content>
-      <p>Module données environnementales en développement</p>
-    </mat-card-content>
-  </mat-card>
+  @if (loading) {
+    <app-loading-spinner></app-loading-spinner>
+  }
+
+  @if (!loading && !summary) {
+    <mat-card>
+      <mat-card-content>
+        <p>
+          Impossible de charger les données environnementales. Vérifiez que le mock API est démarré.
+        </p>
+      </mat-card-content>
+    </mat-card>
+  }
+
+  @if (!loading && summary) {
+    <div class="stats-grid">
+      <app-stat-card
+        title="Sites qualité eau"
+        [value]="summary.waterQualitySites.toString()"
+        icon="water"
+        color="#1abc9c"
+      ></app-stat-card>
+      <app-stat-card
+        title="Stations air"
+        [value]="summary.airMonitoringStations.toString()"
+        icon="air"
+        color="#3498db"
+      ></app-stat-card>
+      <app-stat-card
+        title="Relevés climatiques"
+        [value]="summary.climateRecords.toString()"
+        icon="thermostat"
+        color="#e74c3c"
+      ></app-stat-card>
+      <app-stat-card
+        title="Échantillons géologie"
+        [value]="summary.geologySamples.toString()"
+        icon="terrain"
+        color="#795548"
+      ></app-stat-card>
+    </div>
+  }
 </div>

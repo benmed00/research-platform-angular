@@ -1,4 +1,13 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  DestroyRef,
+  Input,
+  OnInit,
+  inject
+} from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { SHARED_IMPORTS } from '../../../shared/shared-imports';
 import { UserRole } from '../../../models/user.model';
 import { AuthService } from '../../../core/services/auth.service';
@@ -8,13 +17,12 @@ interface MenuItem {
   icon: string;
   route: string;
   roles?: UserRole[];
-  children?: MenuItem[];
 }
 
 /**
  * Navigation sidebar with role-based menu filtering.
  *
- * @remarks Hiding menu items is not sufficient for access control — routes must use RoleGuard.
+ * @remarks Hiding menu items is not sufficient for access control — routes must use roleGuard.
  */
 @Component({
   selector: 'app-sidebar',
@@ -24,87 +32,68 @@ interface MenuItem {
   standalone: true,
   imports: [SHARED_IMPORTS]
 })
-export class SidebarComponent {
+export class SidebarComponent implements OnInit {
+  private readonly authService = inject(AuthService);
+  private readonly cdr = inject(ChangeDetectorRef);
+  private readonly destroyRef = inject(DestroyRef);
+
   @Input() isOpen: boolean = true;
 
-  menuItems: MenuItem[] = [
-    {
-      label: 'Tableau de bord',
-      icon: 'dashboard',
-      route: '/dashboard'
-    },
+  visibleMenuItems: MenuItem[] = [];
+
+  private readonly menuItems: MenuItem[] = [
+    { label: 'Tableau de bord', icon: 'dashboard', route: '/dashboard' },
     {
       label: 'Utilisateurs',
       icon: 'people',
       route: '/users',
       roles: [UserRole.DIRECTEUR_SCIENTIFIQUE, UserRole.DIRECTEUR_ADMIN_FINANCIER]
     },
-    {
-      label: 'Ressources Humaines',
-      icon: 'work',
-      route: '/hr'
-    },
+    { label: 'Ressources Humaines', icon: 'work', route: '/hr' },
     {
       label: 'Comptabilité',
       icon: 'account_balance',
       route: '/accounting',
       roles: [UserRole.DIRECTEUR_ADMIN_FINANCIER, UserRole.LOGISTICIEN]
     },
-    {
-      label: 'Équipements',
-      icon: 'precision_manufacturing',
-      route: '/equipment'
-    },
-    {
-      label: 'Missions',
-      icon: 'explore',
-      route: '/missions'
-    },
-    {
-      label: 'Espèces',
-      icon: 'eco',
-      route: '/species'
-    },
-    {
-      label: 'Données Environnementales',
-      icon: 'water_drop',
-      route: '/environmental-data'
-    },
-    {
-      label: 'SIG & Cartographie',
-      icon: 'map',
-      route: '/gis'
-    },
-    {
-      label: 'Documents',
-      icon: 'folder',
-      route: '/documents'
-    },
-    {
-      label: 'Publications',
-      icon: 'menu_book',
-      route: '/publishing'
-    }
+    { label: 'Équipements', icon: 'precision_manufacturing', route: '/equipment' },
+    { label: 'Missions', icon: 'explore', route: '/missions' },
+    { label: 'Espèces', icon: 'eco', route: '/species' },
+    { label: 'Données Environnementales', icon: 'water_drop', route: '/environmental-data' },
+    { label: 'SIG & Cartographie', icon: 'map', route: '/gis' },
+    { label: 'Documents', icon: 'folder', route: '/documents' },
+    { label: 'Publications', icon: 'menu_book', route: '/publishing' }
   ];
 
   /**
-   * Injects the auth service for role-based menu filtering.
+   * Subscribes to auth changes so role-filtered menu items stay in sync.
    *
-   * @param authService - Provides the current user for role-based filtering
+   * @returns Nothing.
    */
-  constructor(private authService: AuthService) {}
+  ngOnInit(): void {
+    this.refreshVisibleMenuItems();
+    this.authService.currentUser$.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(() => {
+      this.refreshVisibleMenuItems();
+      this.cdr.markForCheck();
+    });
+  }
 
   /**
-   * Returns menu items visible to the current user based on role restrictions.
+   * Recomputes menu items visible to the current user.
    *
-   * @returns Filtered menu items; empty when no user is logged in
+   * @returns Nothing.
    */
-  getVisibleMenuItems(): MenuItem[] {
+  private refreshVisibleMenuItems(): void {
     const user = this.authService.getCurrentUser();
-    if (!user) return [];
+    if (!user) {
+      this.visibleMenuItems = [];
+      return;
+    }
 
-    return this.menuItems.filter((item) => {
-      if (!item.roles || item.roles.length === 0) return true;
+    this.visibleMenuItems = this.menuItems.filter((item) => {
+      if (!item.roles || item.roles.length === 0) {
+        return true;
+      }
       return item.roles.includes(user.role);
     });
   }
